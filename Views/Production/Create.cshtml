@@ -1,0 +1,119 @@
+@model EaproERP.Models.ProductionLine
+@{
+    ViewData["Title"] = "Boot Production Line";
+}
+
+<style>
+    .factory-form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        animation: slideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .cyber-card {
+        background: #0F111A;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .cyber-header {
+        background: linear-gradient(90deg, #1c253b 0%, #0F111A 100%);
+        padding: 2rem;
+        border-bottom: 2px solid var(--eapro-red);
+    }
+
+    .cyber-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s;
+    }
+
+    .cyber-input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--eapro-red);
+        box-shadow: 0 0 15px rgba(211, 47, 47, 0.3);
+        color: #fff;
+    }
+
+    .cyber-label {
+        color: #94A3B8;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    @@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } }
+</style>
+
+<div class="factory-form-container py-5">
+    <div class="cyber-card">
+        <div class="cyber-header d-flex align-items-center gap-3">
+            <div class="bg-danger rounded-circle p-3 d-flex align-items-center justify-content-center">
+                <i class="fas fa-power-off text-white fs-4"></i>
+            </div>
+            <div>
+                <h3 class="fw-800 text-white mb-0">Boot New Production Line</h3>
+                <span class="text-success small fw-bold font-monospace">ROORKEE_UNIT_ONLINE</span>
+            </div>
+        </div>
+
+        <div class="p-5">
+            <form asp-action="Create">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="cyber-label">Line Identifier</label>
+                        <input asp-for="LineName" class="form-control cyber-input" placeholder="e.g. Line Alpha-1" required />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="cyber-label">Current Product</label>
+                        <select asp-for="CurrentProduct" class="form-select cyber-input">
+                            <option value="TRON-3200 AI-MPPT">TRON-3200 AI-MPPT</option>
+                            <option value="590W TOPCon Bifacial">590W TOPCon Bifacial</option>
+                            <option value="Enerbatt 250Ah Tubular">Enerbatt 250Ah Tubular</option>
+                            <option value="11kW On-Grid Inverter">11kW On-Grid Inverter</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="cyber-label">Daily Target (Units)</label>
+                        <input asp-for="DailyTarget" class="form-control cyber-input" type="number" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="cyber-label">Units Completed</label>
+                        <input asp-for="UnitsCompleted" class="form-control cyber-input" type="number" value="0" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="cyber-label">System Status</label>
+                        <select asp-for="Status" class="form-select cyber-input">
+                            <option value="Active">Active (Optimal)</option>
+                            <option value="Maintenance">Under Maintenance</option>
+                            <option value="Offline">Offline / Standby</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="cyber-label">Initial QA Score (%)</label>
+                        <input asp-for="QualityScore" class="form-control cyber-input" type="number" step="0.1" value="100.0" />
+                    </div>
+                </div>
+
+                <div class="mt-5 d-flex gap-3">
+                    <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 fw-bold shadow-lg">
+                        <i class="fas fa-bolt me-2"></i> Initialize Line
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light btn-lg rounded-pill px-5">Abort</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

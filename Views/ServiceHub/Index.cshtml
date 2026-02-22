@@ -1,0 +1,92 @@
+@model EaproERP.Controllers.ServiceDashboardViewModel
+@{ ViewData["Title"] = "Eapro Care Hub"; }
+
+<style>
+    :root { --eapro-red: #D32F2F; --border-subtle: rgba(255,255,255,0.08); }
+    .hub-wrapper { animation: fadeIn 0.5s ease-out; }
+
+    /* Dual Node Layout */
+    .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    
+    .node-card { 
+        background: #0F111A; border: 1px solid var(--border-subtle); 
+        border-radius: 24px; padding: 2rem; height: 100%;
+    }
+
+    .list-item { 
+        background: rgba(255,255,255,0.02); border: 1px solid transparent;
+        border-radius: 12px; padding: 1rem; margin-bottom: 12px; transition: 0.3s;
+    }
+    .list-item:hover { border-color: var(--eapro-red); background: rgba(211, 47, 47, 0.03); }
+
+    .status-tag { font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+    .tag-valid { color: #00E676; border: 1px solid #00E676; }
+    .tag-expired { color: #FF5252; border: 1px solid #FF5252; }
+
+    .label-micro { font-size: 0.6rem; color: #64748B; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; display: block; }
+    .value-node { color: #fff; font-weight: 700; font-size: 0.95rem; }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+</style>
+
+<div class="hub-wrapper">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <div class="text-danger fw-800 small mb-2 uppercase letter-spacing-2">Customer Support Node</div>
+            <h1 class="fw-800 text-white mb-0" style="letter-spacing: -3px;">Eapro <span class="text-danger">Care</span></h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="CreateWarranty" class="btn btn-dark border border-white border-opacity-10 rounded-pill px-4 fw-bold small">REGISTER_PRODUCT</a>
+            <a asp-action="CreateAmc" class="btn btn-danger rounded-pill px-4 fw-800 shadow-lg">INITIALIZE_AMC</a>
+        </div>
+    </div>
+
+    <div class="service-grid">
+        <section class="node-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-800 text-white mb-0"><i class="fas fa-shield-halved text-danger me-2"></i>Warranty <span class="text-danger">Vault</span></h4>
+                <span class="text-white-50 small font-monospace">COUNT: @Model.Warranties.Count</span>
+            </div>
+
+            @foreach (var w in Model.Warranties) {
+                <div class="list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="label-micro">SN: @w.SerialNumber</span>
+                        <div class="value-node">@w.CustomerName</div>
+                        <small class="text-white-50">@w.ProductName</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="status-tag @(w.IsActive ? "tag-valid" : "tag-expired")">@(w.IsActive ? "Valid" : "Expired")</span>
+                        <div class="mt-2"><a asp-action="WarrantyDetails" asp-route-id="@w.Id" class="text-danger small fw-bold text-decoration-none">DOSSIER</a></div>
+                    </div>
+                </div>
+            }
+        </section>
+
+        <section class="node-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-800 text-white mb-0"><i class="fas fa-file-signature text-danger me-2"></i>AMC <span class="text-danger">Ledger</span></h4>
+                <span class="text-white-50 small font-monospace">REV: ₹@Model.AmcContracts.Sum(x => x.ContractValue).ToString("N0")</span>
+            </div>
+
+            @foreach (var a in Model.AmcContracts) {
+                <div class="list-item">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <span class="label-micro">Client / Site</span>
+                            <div class="value-node">@a.ClientName</div>
+                            <small class="text-white-50">@a.ProjectSite</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="label-micro">Next Service</span>
+                            <div class="text-info fw-800">@a.NextScheduledService.ToString("dd MMM yyyy")</div>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 3px; background: rgba(255,255,255,0.05);">
+                        <div class="progress-bar bg-danger" style="width: 100%"></div>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>

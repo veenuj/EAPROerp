@@ -1,0 +1,42 @@
+@model EaproERP.Models.AmcNode
+@{ ViewData["Title"] = "Initialize AMC"; }
+
+<div class="py-5">
+    <div class="config-card" style="background: #0F111A; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 3rem; max-width: 800px; margin: 0 auto;">
+        <h2 class="fw-800 text-white mb-4">Initialize <span class="text-danger">AMC</span> Ledger</h2>
+        
+        <form asp-action="CreateAmc" method="post">
+            <div class="row g-4">
+                <div class="col-md-12">
+                    <label class="label-tech" style="color:#64748B; font-size:0.65rem; font-weight:800; text-transform:uppercase;">Client Entity / Organization</label>
+                    <input asp-for="ClientName" class="input-titan" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; padding:12px 18px; width:100%;" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="label-tech">Contract Value (INR)</label>
+                    <input asp-for="ContractValue" type="number" class="input-titan" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="label-tech">Service Frequency</label>
+                    <select asp-for="ServiceFrequency" class="input-titan">
+                        <option value="Monthly">Monthly Cycle</option>
+                        <option value="Quarterly">Quarterly Cycle</option>
+                        <option value="Annual">Annual Visit</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="label-tech">Next Service Date</label>
+                    <input asp-for="NextScheduledService" type="date" class="input-titan" />
+                </div>
+                <div class="col-md-6">
+                    <label class="label-tech">Expiry Date</label>
+                    <input asp-for="ContractExpiryDate" type="date" class="input-titan" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <a href="/ServiceHub" class="text-white-50 text-decoration-none fw-bold small uppercase">Abort_Sync</a>
+                <button type="submit" class="btn btn-danger rounded-pill px-5 py-3 fw-800 shadow-lg">LOCK_CONTRACT</button>
+            </div>
+        </form>
+    </div>
+</div>

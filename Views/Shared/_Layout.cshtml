@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"] - EAPRO Titan OS</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --eapro-red: #D32F2F;
+            --eapro-red-glow: rgba(211, 47, 47, 0.5);
+            --eapro-dark: #0A0C12;
+            --eapro-bg: #F8FAFC;
+        }
+
+        body {
+            background-color: var(--eapro-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1F2937;
+            overflow-x: hidden;
+        }
+
+        /* --- Premium Navbar --- */
+        .navbar {
+            background: rgba(10, 12, 18, 0.98) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--eapro-red);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: #fff !important;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        .navbar-brand span { 
+            color: var(--eapro-red); 
+            text-shadow: 0 0 10px var(--eapro-red-glow);
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 10px 18px !important;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 3px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link:hover, .nav-link:focus {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: #fff !important;
+            background: var(--eapro-red);
+            box-shadow: 0 8px 20px var(--eapro-red-glow);
+        }
+
+        .dropdown-menu {
+            background: #111827;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--eapro-red);
+            border-radius: 16px;
+            margin-top: 15px;
+            padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .dropdown-item {
+            color: rgba(255,255,255,0.7);
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 12px 20px;
+            border-radius: 10px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--eapro-red);
+        }
+
+        /* --- System Status Bar --- */
+        .status-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #live-clock {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pulse-indicator {
+            width: 8px; height: 8px;
+            background: #00E676;
+            border-radius: 50%;
+            position: relative;
+        }
+        .pulse-indicator::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: inherit; border-radius: inherit; animation: ripple 2s infinite;
+        }
+
+        @@keyframes ripple { 0% { transform: scale(.8); opacity: 1; } 100% { transform: scale(2.8); opacity: 0; } }
+
+        /* --- Chat UI --- */
+        #aiChatBtn {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 65px; height: 65px;
+            background: var(--eapro-red);
+            border: 4px solid #fff;
+            box-shadow: 0 10px 30px rgba(211, 47, 47, 0.4);
+            z-index: 2000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #aiChatWindow {
+            position: fixed; bottom: 110px; right: 30px;
+            width: 380px; height: 550px; max-height: 80vh;
+            background: #fff; border-radius: 28px;
+            display: none; flex-direction: column; z-index: 2001;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            overflow: hidden; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chat-header { background: #0A0C12; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+
+        @@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        #chatBody { flex-grow: 1; overflow-y: auto; padding: 20px; background: #F9FAFB; display: flex; flex-direction: column; gap: 15px; }
+        .chat-message { max-width: 85%; padding: 12px 16px; font-size: 0.9rem; line-height: 1.5; border-radius: 15px; }
+        .chat-ai { background: #fff; color: #1F2937; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #E5E7EB; }
+        .chat-user { background: var(--eapro-red); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+        .chat-footer { padding: 15px; background: #fff; border-top: 1px solid #F3F4F6; }
+        .chat-input-container { background: #F3F4F6; border-radius: 50px; padding: 5px; display: flex; align-items: center; }
+        #chatInput { border: none; background: transparent; padding: 8px 15px; width: 100%; font-size: 0.9rem; }
+        #chatInput:focus { outline: none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid px-lg-5">
+            <a class="navbar-brand" href="/">EAPRO<span>TITAN</span></a>
+            
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars-staggered"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" href="/">
+                            <i class="fas fa-microchip me-2"></i>OS Core
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Inventory" || ViewContext.RouteData.Values["controller"]?.ToString() == "Production" ? "active" : "")" href="#" id="supplyDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-boxes-stacked me-2"></i>Supply Chain
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Inventory"><i class="fas fa-warehouse text-danger"></i> Warehouse Stock</a></li>
+                            <li><a class="dropdown-item" href="/Production"><i class="fas fa-industry text-primary"></i> Manufacturing Hub</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dealers" || ViewContext.RouteData.Values["controller"]?.ToString() == "Procurement" || ViewContext.RouteData.Values["controller"]?.ToString() == "Trust" ? "active" : "")" href="#" id="partnerDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-handshake me-2"></i>Partners
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Dealers"><i class="fas fa-network-wired text-warning"></i> Dealer Network</a></li>
+                            <li><a class="dropdown-item" href="/Procurement"><i class="fas fa-truck-ramp-box text-info"></i> Vendor Procurement</a></li>
+                            <li><hr class="dropdown-divider border-secondary opacity-10"></li>
+                            <li><a class="dropdown-item" href="/Trust"><i class="fas fa-link text-danger"></i> Trust Ledger (Blockchain)</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProjectEngine" || ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceHub" ? "active" : "")" href="#" id="deployDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-solar-panel me-2"></i>Deployment
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/ProjectEngine"><i class="fas fa-tower-observation text-info"></i> EPC Project Engine</a></li>
+                            <li><a class="dropdown-item" href="/ServiceHub"><i class="fas fa-screwdriver-wrench text-success"></i> Eapro Care (Service)</a></li>
+                        </ul>
+                    </li>
+
+                    @* RENAMED SECTION: CAPITAL & TALENT *@
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Finance" || ViewContext.RouteData.Values["controller"]?.ToString() == "Payroll" || ViewContext.RouteData.Values["controller"]?.ToString() == "Recruitment" ? "active" : "")" href="#" id="financeDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-coins me-2"></i>Capital & Talent
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header text-uppercase small fw-800 text-muted opacity-50">Financial Assets</li>
+                            <li><a class="dropdown-item" href="/Finance/CreateInvoice"><i class="fas fa-file-invoice-dollar text-success"></i> New Sales Bill (GST)</a></li>
+                            <li><a class="dropdown-item" href="/Finance/InvoiceList"><i class="fas fa-list-check text-primary"></i> Billing History</a></li>
+                            
+                            <li><hr class="dropdown-divider border-secondary opacity-10"></li>
+                            
+                            <li class="dropdown-header text-uppercase small fw-800 text-muted opacity-50">Human Capital</li>
+                            <li><a class="dropdown-item" href="/Payroll"><i class="fas fa-users-gear text-info"></i> Personnel Hub</a></li>
+                            <li><a class="dropdown-item" href="/Recruitment/Pipeline"><i class="fas fa-user-tie text-warning"></i> Talent Pipeline (Interviews)</a></li>
+                            <li><a class="dropdown-item" href="/Payroll/Disburse"><i class="fas fa-indian-rupee-sign text-success"></i> Salary Batch</a></li>
+                            <li><a class="dropdown-item" href="/Payroll/AttendanceLogs"><i class="fas fa-fingerprint text-danger"></i> Biometric Logs</a></li>
+                            
+                            <li><hr class="dropdown-divider border-secondary opacity-10"></li>
+                            <li><a class="dropdown-item text-danger" href="/Payroll/Logout"><i class="fas fa-lock"></i> Terminate Session</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="status-bar d-none d-lg-flex">
+                    <div id="live-clock">00:00:00</div>
+                    <div class="pulse-indicator"></div>
+                    <span class="text-white fw-800" style="font-size: 0.6rem; letter-spacing: 1px;">TITAN_V5.0_STABLE</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-fluid px-lg-5 mt-4">
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <button class="btn rounded-circle d-flex align-items-center justify-content-center" id="aiChatBtn" onclick="toggleChat()">
+        <i class="fas fa-brain text-white fs-3"></i>
+    </button>
+
+    <div id="aiChatWindow">
+        <div class="chat-header text-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center shadow" style="width:35px; height:35px;"><i class="fas fa-bolt-lightning fs-6"></i></div>
+                <div><h6 class="mb-0 fw-bold" style="font-size: 0.85rem;">Titan Intelligence</h6><small class="text-success fw-bold" style="font-size: 0.6rem;">● NEURAL_LINK_ESTABLISHED</small></div>
+            </div>
+            <button class="btn-close btn-close-white" style="font-size: 0.7rem;" onclick="toggleChat()"></button>
+        </div>
+        <div id="chatBody">
+            <div class="chat-message chat-ai shadow-sm">Uplink confirmed. Accessing Roorkee Manufacturing datasets. How can I assist with your <strong>Solar ERP</strong> metrics?</div>
+        </div>
+        <div class="chat-footer">
+            <div class="chat-input-container shadow-sm border">
+                <input type="text" id="chatInput" placeholder="Query the Neural Core..." onkeypress="handleKeyPress(event)">
+                <button class="btn btn-danger rounded-circle p-0 d-flex align-items-center justify-content-center" onclick="sendMessage()" style="width:35px; height:35px;"><i class="fas fa-paper-plane fs-6"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateClock() { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('en-GB'); }
+        setInterval(updateClock, 1000); updateClock();
+
+        const chatWindow = document.getElementById('aiChatWindow');
+        const chatBtn = document.getElementById('aiChatBtn');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+
+        function toggleChat() {
+            if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+                chatWindow.style.display = 'flex';
+                chatBtn.style.opacity = '0';
+                chatBtn.style.pointerEvents = 'none';
+                chatInput.focus();
+            } else {
+                chatWindow.style.display = 'none';
+                chatBtn.style.opacity = '1';
+                chatBtn.style.pointerEvents = 'auto';
+            }
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim(); if (!message) return;
+            appendMessage(message, 'user'); chatInput.value = '';
+            const typingId = appendMessage('<div class="d-flex gap-1"><div class="typing-dot" style="width:5px;height:5px;background:#94A3B8;border-radius:50%;animation:bounce 1.4s infinite"></div><div class="typing-dot" style="width:5px;height:5px;background:#94A3B8;border-radius:50%;animation:bounce 1.4s infinite .2s"></div><div class="typing-dot" style="width:5px;height:5px;background:#94A3B8;border-radius:50%;animation:bounce 1.4s infinite .4s"></div></div>', 'ai', true);
+            try {
+                const response = await fetch('/api/Chat/AskAi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: message }) });
+                const data = await response.json(); document.getElementById(typingId).remove(); appendMessage(data.reply, 'ai');
+            } catch (error) { document.getElementById(typingId).innerHTML = "Neural link timeout."; }
+        }
+
+        function appendMessage(text, sender, isTyping = false) {
+            const msgDiv = document.createElement('div'); msgDiv.className = `chat-message chat-${sender} shadow-sm`; msgDiv.innerHTML = text;
+            const id = 'msg-' + Date.now(); if (isTyping) msgDiv.id = id;
+            chatBody.appendChild(msgDiv); chatBody.scrollTop = chatBody.scrollHeight; return id;
+        }
+        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

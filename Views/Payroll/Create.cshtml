@@ -1,0 +1,288 @@
+@model EaproERP.Models.Employee
+@{ 
+    ViewData["Title"] = "Employee Onboarding"; 
+    
+    // 🛑 AUTO-GENERATE BARCODE with high-precision timestamp
+    string autoBarcode = "EAP-" + DateTime.Now.ToString("yyMM") + "-" + new Random().Next(1000, 9999).ToString();
+}
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --eapro-slate: #1E293B;
+        --input-bg: #F8FAFC;
+    }
+
+    .onboard-container { animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    .id-badge-preview {
+        background: linear-gradient(135deg, var(--eapro-slate) 0%, #0F172A 100%);
+        border-radius: 20px;
+        padding: 20px;
+        color: white;
+        border-left: 5px solid var(--eapro-red);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+    }
+
+    .onboard-card {
+        background: white;
+        border-radius: 32px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.06);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    .form-group-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2rem;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 36px; height: 36px;
+        background: rgba(211, 47, 47, 0.1);
+        color: var(--eapro-red);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+    }
+
+    .input-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #64748B;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control, .form-select {
+        border-radius: 16px;
+        background: var(--input-bg);
+        border: 1px solid #E2E8F0;
+        padding: 14px 18px;
+        font-weight: 600;
+        color: var(--eapro-slate);
+        transition: 0.3s;
+    }
+
+    .form-control:focus {
+        background: white;
+        border-color: var(--eapro-red);
+        box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .salary-input {
+        font-size: 1.25rem;
+        color: #15803D !important;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+    }
+
+    .btn-submit {
+        background: var(--eapro-red);
+        color: white;
+        border: none;
+        border-radius: 100px;
+        padding: 18px 45px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        box-shadow: 0 15px 30px rgba(211, 47, 47, 0.3);
+        transition: 0.4s;
+    }
+
+    .btn-submit:hover {
+        background: #B91C1C;
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.4);
+    }
+
+    @@keyframes slideInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="container onboard-container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            
+            <div class="row align-items-end mb-5 g-4">
+                <div class="col-lg-7">
+                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-800 mb-3">HR ADMINISTRATIVE PORTAL</span>
+                    <h1 class="fw-800 text-dark display-5 mb-1">Onboard <span class="text-danger">Talent</span></h1>
+                    <p class="text-muted fs-5 fw-500">Initialize official employment records and neural identity link.</p>
+                </div>
+                <div class="col-lg-5">
+                    <div class="id-badge-preview">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-800 opacity-50">SYSTEM GENERATED ID</span>
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="fs-3 fw-800 tracking-widest">@autoBarcode</div>
+                        <div class="small fw-bold mt-1 text-danger">Ready for Card Encoding</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="onboard-card p-4 p-lg-5">
+                <form asp-action="Create">
+                    
+                    @if (!ViewData.ModelState.IsValid) {
+                        <div class="alert alert-danger border-0 rounded-4 mb-5 d-flex align-items-center gap-3">
+                            <i class="fas fa-circle-exclamation fs-3"></i>
+                            <div class="fw-bold">Required fields are missing or invalid. Please check the entries highlighted below.</div>
+                        </div>
+                    }
+
+                    <div class="form-group-header">
+                        <div class="section-icon"><i class="fas fa-fingerprint"></i></div>
+                        <h4 class="mb-0 fw-800 text-dark">Neural Identity & Contact</h4>
+                    </div>
+                    
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-8">
+                            <label class="input-label">Full Legal Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="John Doe" required />
+                            <input type="hidden" asp-for="EmployeeCode" value="@autoBarcode" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">Date of Joining</label>
+                            <input asp-for="DateOfJoining" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">Primary Phone</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 bg-transparent text-muted"><i class="fas fa-phone"></i></span>
+                                <input asp-for="Phone" class="form-control ms-n3" placeholder="+91..." />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">Work Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 bg-transparent text-muted"><i class="fas fa-envelope"></i></span>
+                                <input asp-for="Email" type="email" class="form-control ms-n3" placeholder="name@eapro.in" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">Emergency Contact</label>
+                            <input asp-for="EmergencyContact" class="form-control" placeholder="Relation & Number" />
+                        </div>
+                    </div>
+
+                    <div class="form-group-header">
+                        <div class="section-icon"><i class="fas fa-briefcase"></i></div>
+                        <h4 class="mb-0 fw-800 text-dark">Deployment & Compensation</h4>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-4">
+                            <label class="input-label">Operational Department</label>
+                            <select asp-for="Department" class="form-select">
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="R&D">Research & Development</option>
+                                <option value="Logistics">Inventory & Logistics</option>
+                                <option value="Corporate">Corporate HQ</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="input-label">Official Designation</label>
+                            <select asp-for="Designation" class="form-select" required>
+                                <option value="" disabled selected>Select Position</option>
+                                
+                                <optgroup label="Management & Executive">
+                                    <option value="Director">Director</option>
+                                    <option value="General Manager">General Manager</option>
+                                    <option value="Plant Manager">Plant Manager</option>
+                                    <option value="Deputy Manager">Deputy Manager</option>
+                                    <option value="Assistant Manager">Assistant Manager</option>
+                                </optgroup>
+
+                                <optgroup label="Technical & Engineering">
+                                    <option value="Senior Solar Engineer">Senior Solar Engineer</option>
+                                    <option value="R&D Specialist">R&D Specialist</option>
+                                    <option value="Full Stack Developer">Full Stack Developer</option>
+                                    <option value="Quality Assurance Engineer">Quality Assurance Engineer</option>
+                                    <option value="Site Engineer">Site Engineer</option>
+                                </optgroup>
+
+                                <optgroup label="Production & Operations">
+                                    <option value="Production Supervisor">Production Supervisor</option>
+                                    <option value="Line Lead">Line Lead</option>
+                                    <option value="Technical Technician">Technical Technician</option>
+                                    <option value="Inventory Controller">Inventory Controller</option>
+                                    <option value="Assembly Operator">Assembly Operator</option>
+                                </optgroup>
+
+                                <optgroup label="Sales & Administration">
+                                    <option value="Business Analyst">Business Analyst</option>
+                                    <option value="Sales Manager">Sales Manager</option>
+                                    <option value="Accountant">Accountant</option>
+                                    <option value="HR Coordinator">HR Coordinator</option>
+                                    <option value="Receptionist">Receptionist</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="input-label">Job Location / Branch</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 bg-transparent text-muted"><i class="fas fa-location-dot"></i></span>
+                                <select asp-for="JobLocation" class="form-select ms-n3">
+                                    <option value="Roorkee">Roorkee Manufacturing Unit</option>
+                                    <option value="Meerut">Meerut Corporate Office</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="input-label">Monthly CTC (Base Salary)</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 bg-transparent fw-800 fs-5 text-success">₹</span>
+                                <input asp-for="BaseSalary" type="number" class="form-control ms-n3 salary-input" placeholder="0.00" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="input-label">Signing / Performance Bonus</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 bg-transparent fw-800 fs-5 text-muted">₹</span>
+                                <input asp-for="Bonus" type="number" class="form-control ms-n3 fw-bold" value="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group-header">
+                        <div class="section-icon"><i class="fas fa-building-columns"></i></div>
+                        <h4 class="mb-0 fw-800 text-dark">Financial Compliance</h4>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="input-label">Government ID (Aadhar/PAN)</label>
+                            <input asp-for="GovernmentId" class="form-control" style="text-transform: uppercase;" placeholder="XXXX XXXX XXXX" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">Settlement Bank Account</label>
+                            <input asp-for="BankAccountNumber" class="form-control" placeholder="Account Number" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="input-label">IFSC Routing Code</label>
+                            <input asp-for="IFSCCode" class="form-control" style="text-transform: uppercase;" placeholder="SBIN000XXXX" />
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-5 d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="text-decoration-none text-muted fw-800 small uppercase"><i class="fas fa-chevron-left me-2"></i>Abort Process</a>
+                        <button type="submit" class="btn-submit">
+                            FINALIZE ONBOARDING <i class="fas fa-check-circle ms-2"></i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

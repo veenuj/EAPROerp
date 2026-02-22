@@ -1,0 +1,45 @@
+@model EaproERP.Models.WarrantyNode
+@{ ViewData["Title"] = "Register Warranty"; }
+
+<style>
+    .config-card { background: #0F111A; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 3rem; max-width: 800px; margin: 0 auto; }
+    .label-tech { font-size: 0.65rem; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 10px; }
+    .input-titan { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 18px; font-weight: 600; width: 100%; transition: 0.3s; }
+    .input-titan:focus { border-color: #D32F2F; outline: none; background: rgba(255,255,255,0.06); }
+</style>
+
+<div class="py-5">
+    <div class="config-card">
+        <h2 class="fw-800 text-white mb-4">Register Product <span class="text-danger">Warranty</span></h2>
+        
+        <form asp-action="CreateWarranty" method="post">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label class="label-tech">Product Serial Number</label>
+                    <input asp-for="SerialNumber" class="input-titan" placeholder="e.g. TRON-3200-XXXX" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="label-tech">Purchase Date</label>
+                    <input asp-for="PurchaseDate" type="date" class="input-titan" required />
+                </div>
+                <div class="col-md-12">
+                    <label class="label-tech">Customer Full Name</label>
+                    <input asp-for="CustomerName" class="input-titan" required />
+                </div>
+                <div class="col-md-8">
+                    <label class="label-tech">Product Model Name</label>
+                    <input asp-for="ProductName" class="input-titan" placeholder="e.g. Eapro Tron 3200 PCU" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="label-tech">Period (Months)</label>
+                    <input asp-for="WarrantyPeriodMonths" type="number" class="input-titan" value="24" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <a href="/ServiceHub" class="text-white-50 text-decoration-none fw-bold small uppercase">Abort</a>
+                <button type="submit" class="btn btn-danger rounded-pill px-5 py-3 fw-800">GENERATE_CERTIFICATE</button>
+            </div>
+        </form>
+    </div>
+</div>

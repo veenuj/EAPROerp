@@ -1,0 +1,21 @@
+@model EaproERP.Models.Vendor
+@{ ViewData["Title"] = "Purge Vendor"; }
+
+<div class="container py-5 text-center" style="max-width: 600px;">
+    <div class="bg-dark text-white p-5 rounded-4 shadow-lg border border-danger">
+        <i class="fas fa-biohazard text-danger mb-4" style="font-size: 5rem;"></i>
+        <h2 class="fw-800 mb-3 text-uppercase letter-spacing-2">Purge Data Node?</h2>
+        <p class="text-white-50 mb-4">You are about to permanently decommission <strong>@Model.CompanyName</strong> from the supply chain grid. This action is irreversible.</p>
+        
+        <div class="bg-white bg-opacity-5 p-3 rounded-3 mb-4 text-start">
+            <small class="text-muted d-block fw-bold mb-1 uppercase">Pending Liability</small>
+            <h4 class="fw-800 text-danger mb-0">₹@Model.OutstandingBalance.ToString("N0")</h4>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger w-100 rounded-pill py-3 fw-800 mb-3 shadow">CONFIRM_NODE_PURGE</button>
+            <a href="/Procurement" class="text-white-50 text-decoration-none fw-bold small">ABORT_AND_RETURN</a>
+        </form>
+    </div>
+</div>

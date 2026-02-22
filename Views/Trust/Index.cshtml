@@ -1,0 +1,96 @@
+@model IEnumerable<EaproERP.Models.TrustBlock>
+@{ ViewData["Title"] = "Blockchain Trust Ledger"; }
+
+<style>
+    :root { --eapro-red: #D32F2F; --titan-dark: #0F172A; }
+    .trust-wrapper { animation: fadeIn 0.5s ease-out; }
+    .hash-monospace { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.7rem; color: #64748B; word-break: break-all; }
+    .search-pill { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 50px; padding: 8px 20px; transition: 0.3s; }
+    .search-pill:focus-within { border-color: var(--eapro-red); box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1); }
+    
+    .ledger-table thead { background: #F1F5F9; }
+    .ledger-table th { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 15px; }
+    
+    .chain-indicator { width: 2px; height: 20px; background: #E2E8F0; margin: 0 auto; position: relative; }
+    .chain-indicator::after { content: '\f0c1'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.6rem; color: #CBD5E1; background: #fff; padding: 2px; }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+</style>
+
+<div class="trust-wrapper py-4">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-800 text-dark mb-0" style="letter-spacing: -2px;">Trust <span class="text-danger">Ledger</span></h1>
+            <div class="d-flex align-items-center mt-1">
+                <span class="spinner-grow spinner-grow-sm text-success me-2" style="width: 8px; height: 8px;"></span>
+                <small class="text-muted fw-bold uppercase font-monospace" style="font-size: 0.65rem;">Blockchain_Verification_Node: @Environment.MachineName</small>
+            </div>
+        </div>
+        
+        <div class="search-pill d-flex align-items-center">
+            <i class="fas fa-search text-muted me-2"></i>
+            <input type="text" id="trustSearch" placeholder="Filter by Serial Number..." class="border-0 bg-transparent outline-none fw-bold small" style="outline: none; min-width: 250px;">
+        </div>
+    </div>
+
+    <div class="bg-white rounded-4 shadow-sm border overflow-hidden">
+        <table class="table table-hover align-middle mb-0 ledger-table" id="ledgerTable">
+            <thead>
+                <tr>
+                    <th class="text-center">Sequence</th>
+                    <th>Node Event / Product</th>
+                    <th style="width: 300px;">Chain Link (Hashes)</th>
+                    <th>Timestamp</th>
+                    <th class="text-end pe-4">Integrity Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var block in Model) {
+                    <tr>
+                        <td class="text-center">
+                            <span class="fw-800 text-muted">#@block.Index.ToString("D3")</span>
+                            @if (block.Index > 1) { <div class="chain-indicator"></div> }
+                        </td>
+                        <td>
+                            <div class="fw-800 text-dark">@block.ProductId</div>
+                            <div class="text-muted small">@block.Data</div>
+                        </td>
+                        <td class="hash-monospace">
+                            @* --- SAFE SUBSTRING LOGIC --- *@
+                            <div>
+                                <span class="text-danger fw-bold">CUR:</span> 
+                                @(block.Hash?.Length > 16 ? block.Hash.Substring(0, 16) : block.Hash)...
+                            </div>
+                            <div>
+                                <span class="text-muted fw-bold">PREV:</span> 
+                                @(block.PreviousHash?.Length > 16 ? block.PreviousHash.Substring(0, 16) : block.PreviousHash)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small fw-bold">@block.Timestamp.ToString("dd MMM yyyy")</div>
+                            <div class="text-muted" style="font-size: 0.7rem;">@block.Timestamp.ToString("HH:mm:ss")</div>
+                        </td>
+                        <td class="text-end pe-4">
+                            <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3">
+                                <i class="fas fa-shield-check me-1"></i> VERIFIED
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('trustSearch').addEventListener('keyup', function() {
+            let filter = this.value.toUpperCase();
+            let rows = document.querySelector("#ledgerTable tbody").rows;
+            for (let i = 0; i < rows.length; i++) {
+                let productId = rows[i].cells[1].textContent.toUpperCase();
+                rows[i].style.display = productId.indexOf(filter) > -1 ? "" : "none";
+            }
+        });
+    </script>
+}

@@ -1,0 +1,207 @@
+@model IEnumerable<EaproERP.Models.Vendor>
+@{
+    ViewData["Title"] = "Supply Chain Matrix";
+    var totalLiability = Model.Sum(x => x.OutstandingBalance);
+}
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --titan-slate: #1E293B;
+        --border-subtle: rgba(255, 255, 255, 0.08);
+    }
+
+    .matrix-wrapper { animation: fadeIn 0.5s ease-out; }
+
+    /* --- High-Density Header --- */
+    .matrix-header {
+        padding: 2.5rem 0;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 2.5rem;
+    }
+
+    .breadcrumb-titan { font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; color: #64748B; margin-bottom: 10px; }
+
+    /* --- Compact Analytics Bar --- */
+    .analytics-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 2.5rem;
+    }
+
+    .analytics-card {
+        background: #0F111A;
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        transition: 0.3s;
+    }
+    .analytics-card:hover { border-color: var(--eapro-red); transform: translateY(-3px); }
+
+    .label-caps { font-size: 0.6rem; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 1.5px; }
+    .value-bold { font-size: 1.1rem; font-weight: 700; color: #fff; display: block; margin-top: 4px; }
+
+    /* --- Filter & Search Ribbon --- */
+    .filter-ribbon {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 10px 20px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* --- Precision Ledger --- */
+    .ledger-container {
+        background: #0F111A;
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .table-titan { margin-bottom: 0; font-size: 0.9rem; }
+    .table-titan thead th {
+        background: #050505;
+        color: #64748B;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        padding: 1.2rem 1.5rem;
+        border: none;
+    }
+
+    .table-titan tbody tr { border-bottom: 1px solid rgba(255,255,255,0.02); transition: 0.2s; }
+    .table-titan tbody tr:hover { background: rgba(211, 47, 47, 0.03); }
+    .table-titan td { padding: 1.2rem 1.5rem; vertical-align: middle; color: #E2E8F0; border: none; }
+
+    /* --- Intelligence Components --- */
+    .category-tag {
+        font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 6px;
+        background: rgba(255,255,255,0.05); color: #94A3B8; border: 1px solid var(--border-subtle);
+    }
+
+    .reliability-strip {
+        width: 100px; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;
+    }
+    .strip-fill { height: 100%; border-radius: 10px; }
+
+    .btn-control {
+        width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-subtle);
+        background: transparent; color: #64748B; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn-control:hover { background: var(--eapro-red); color: #fff; border-color: var(--eapro-red); }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+</style>
+
+<div class="matrix-wrapper">
+    <div class="matrix-header d-flex justify-content-between align-items-end">
+        <div>
+            <div class="breadcrumb-titan">SYSTEM_CORE / SUPPLY_CHAIN / VENDORS</div>
+            <h1 class="fw-800 text-white mb-0" style="letter-spacing: -2px;">Procurement <span class="text-danger">Matrix</span></h1>
+        </div>
+        <div class="text-end">
+            <div class="text-white-50 small fw-bold font-monospace mb-2">LAST_SYNC: @DateTime.Now.ToString("HH:mm:ss")</div>
+            <a asp-action="Create" class="btn btn-danger rounded-pill px-4 fw-800 shadow-lg border-0">
+                <i class="fas fa-plus me-2"></i>REGISTER_SUPPLIER
+            </a>
+        </div>
+    </div>
+
+    <div class="analytics-bar">
+        <div class="analytics-card">
+            <span class="label-caps">Total Liability</span>
+            <span class="value-bold text-danger">₹@totalLiability.ToString("N0")</span>
+        </div>
+        <div class="analytics-card">
+            <span class="label-caps">Active Nodes</span>
+            <span class="value-bold">@Model.Count() Entities</span>
+        </div>
+        <div class="analytics-card">
+            <span class="label-caps">Avg Reliability</span>
+            <span class="value-bold text-success">92.4%</span>
+        </div>
+        <div class="analytics-card" style="border-left: 3px solid var(--eapro-red);">
+            <span class="label-caps text-danger">Critical Alerts</span>
+            <span class="value-bold">04 Actions Required</span>
+        </div>
+    </div>
+
+    <div class="filter-ribbon">
+        <div class="d-flex gap-3 align-items-center w-50">
+            <i class="fas fa-search text-muted small"></i>
+            <input type="text" class="form-control bg-transparent border-0 text-white p-0 shadow-none" placeholder="Filter by Vendor Name or Category..." style="font-size: 0.85rem;">
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-dark border border-secondary border-opacity-25 px-3">Category: All</button>
+            <button class="btn btn-sm btn-dark border border-secondary border-opacity-25 px-3">Status: Active</button>
+        </div>
+    </div>
+
+    <div class="ledger-container">
+        <div class="table-responsive">
+            <table class="table table-titan align-middle">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Entity Identity</th>
+                        <th>Classification</th>
+                        <th>Outstanding Balance</th>
+                        <th>Reliability Index</th>
+                        <th>Link Status</th>
+                        <th class="text-end pe-4">Operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vendor in Model) {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-700">@vendor.CompanyName</div>
+                                <small class="text-white-50 font-monospace" style="font-size: 0.7rem;">UID: VND-@vendor.Id.ToString("D4")</small>
+                            </td>
+                            <td>
+                                <span class="category-tag">
+                                    @if(vendor.Category == "Electronics") { <i class="fas fa-microchip me-1 text-danger"></i> }
+                                    else if(vendor.Category == "Logistics") { <i class="fas fa-truck me-1 text-info"></i> }
+                                    else { <i class="fas fa-cubes me-1 text-warning"></i> }
+                                    @vendor.Category
+                                </span>
+                            </td>
+                            <td>
+                                <div class="fw-800 text-white font-monospace">₹@vendor.OutstandingBalance.ToString("N0")</div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="fw-800 small font-monospace" style="color: @(vendor.ReliabilityScore > 80 ? "#00E676" : "#FF5252")">@vendor.ReliabilityScore%</span>
+                                    <div class="reliability-strip">
+                                        <div class="strip-fill @(vendor.ReliabilityScore > 80 ? "bg-success" : "bg-danger")" style="width: @vendor.ReliabilityScore%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="spinner-grow @(vendor.Status == "Active" ? "text-success" : "text-warning")" style="width: 8px; height: 8px;" role="status"></div>
+                                    <span class="small fw-bold uppercase">@vendor.Status</span>
+                                </div>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Details" asp-route-id="@vendor.Id" class="btn-control" title="View Dossier"><i class="fas fa-file-invoice"></i></a>
+                                    <button class="btn-control" title="Procurement Logic"><i class="fas fa-cart-shopping"></i></button>
+                                    <a asp-action="Edit" asp-route-id="@vendor.Id" class="btn-control"><i class="fas fa-pen-nib"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <small class="text-muted fw-bold uppercase tracking-widest">EAPRO Titan OS Supply Chain Node S04</small>
+    </div>
+</div>

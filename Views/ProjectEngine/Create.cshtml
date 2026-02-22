@@ -1,0 +1,74 @@
+@model EaproERP.Models.ProjectEngine
+@{ ViewData["Title"] = "Initialize EPC"; }
+
+<style>
+    .config-card { background: #0F111A; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 3rem; max-width: 950px; margin: 0 auto; }
+    .field-group { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2rem; margin-bottom: 2.5rem; }
+    .label-tech { font-size: 0.65rem; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 10px; }
+    .input-titan { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 18px; font-weight: 600; width: 100%; transition: 0.3s; }
+    .input-titan:focus { border-color: #D32F2F; outline: none; background: rgba(255,255,255,0.06); }
+</style>
+
+<div class="py-5">
+    <div class="config-card shadow-lg">
+        <div class="mb-5">
+            <h2 class="fw-800 text-white mb-1">Initialize Project <span class="text-danger">Uplink</span></h2>
+            <p class="text-white-50 font-monospace small">CORE_ENGINE_v5.0 // EPC_MODULE</p>
+        </div>
+
+        <form asp-action="Create" method="post">
+            <div class="field-group">
+                <span class="label-tech mb-4 text-danger"><i class="fas fa-id-card me-2"></i>Primary Identification</span>
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <label class="label-tech">Project Name / Reference</label>
+                        <input asp-for="ProjectName" class="input-titan" placeholder="e.g. 500kW Grid-Tie Rooftop" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="label-tech">Project Type</label>
+                        <select asp-for="ProjectType" class="input-titan">
+                            <option value="On-Grid">On-Grid (Net Metering)</option>
+                            <option value="Off-Grid">Off-Grid (Standalone)</option>
+                            <option value="Hybrid">Hybrid (Battery Backup)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="label-tech">Client Entity</label>
+                        <input asp-for="ClientName" class="input-titan" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="label-tech">Geospatial Location</label>
+                        <input asp-for="SiteLocation" class="input-titan" placeholder="City, State" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <span class="label-tech mb-4 text-info"><i class="fas fa-satellite me-2"></i>Site Survey Telemetry</span>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label class="label-tech">Roof Infrastructure</label>
+                        <select asp-for="RoofType" class="input-titan">
+                            <option value="RCC Slab">RCC Slab</option>
+                            <option value="Industrial Shed">Industrial Shed</option>
+                            <option value="Ground Mount">Ground Mount</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="label-tech">Peak Capacity (kWp)</label>
+                        <input asp-for="SystemCapacityKW" class="input-titan" type="number" step="0.1" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="label-tech">Shadow Analysis Score (0-100)</label>
+                        <input asp-for="ShadowAnalysisScore" class="input-titan" type="number" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <a href="/ProjectEngine" class="text-white-50 text-decoration-none fw-bold small uppercase font-monospace">Abort_Sequence</a>
+                <button type="submit" class="btn btn-danger rounded-pill px-5 py-3 fw-800 shadow-lg">PUSH_TO_CLOUD</button>
+            </div>
+        </form>
+    </div>
+</div>

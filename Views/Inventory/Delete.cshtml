@@ -1,0 +1,173 @@
+@model EaproERP.Models.Product
+@{ ViewData["Title"] = "Decommission SKU"; }
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --dark-void: #0A0C12;
+        --hazard-glow: rgba(211, 47, 47, 0.2);
+    }
+
+    .delete-container { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+    /* --- Hazard Header --- */
+    .hazard-card {
+        background: linear-gradient(135deg, var(--dark-void) 0%, #1a0505 100%);
+        border-radius: 35px;
+        padding: 3.5rem;
+        color: white;
+        border: 2px solid var(--eapro-red);
+        box-shadow: 0 0 50px var(--hazard-glow);
+        margin-bottom: -40px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* --- Data Purge Summary --- */
+    .purge-summary-card {
+        background: white;
+        border-radius: 40px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+        padding: 5rem 4rem 3rem 4rem;
+        border: 1px solid #f1f5f9;
+    }
+
+    .data-label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #94A3B8;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+    }
+
+    .data-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--dark-void);
+        margin-bottom: 2rem;
+    }
+
+    .ai-purge-box {
+        background: #FFF5F5;
+        border-radius: 24px;
+        padding: 2rem;
+        border: 1px dashed var(--eapro-red);
+        position: relative;
+    }
+
+    .ai-purge-box::before {
+        content: "\f1f8";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: 25px;
+        top: 20px;
+        font-size: 3rem;
+        color: var(--eapro-red);
+        opacity: 0.1;
+    }
+
+    /* --- Action Buttons --- */
+    .btn-purge {
+        background: var(--eapro-red);
+        color: white;
+        border: none;
+        border-radius: 100px;
+        padding: 18px 45px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        transition: 0.4s;
+        box-shadow: 0 15px 30px var(--hazard-glow);
+    }
+
+    .btn-purge:hover {
+        background: #000;
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .btn-abort {
+        color: #64748B;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .btn-abort:hover { color: var(--dark-void); }
+
+    @@keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+</style>
+
+<div class="container delete-container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-9">
+
+            <div class="hazard-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge bg-danger px-3 py-2 rounded-pill fw-800 mb-3">CRITICAL SYSTEM ACTION</span>
+                        <h1 class="fw-800 mb-2">Decommission <span class="text-danger">SKU</span></h1>
+                        <p class="text-white-50 fs-5 mb-0">Confirming the permanent erasure of hardware record: <br><strong class="text-white">@Model.Name</strong></p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="fas fa-radiation text-danger fa-spin-pulse" style="font-size: 6rem; --fa-animation-duration: 4s;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="purge-summary-card">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="data-label">Internal Node ID</div>
+                        <div class="data-value font-monospace">#EAP-@Model.Id.ToString("D4")</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="data-label">Classification</div>
+                        <div class="data-value">@Model.Category</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="data-label">Current Stock Loss</div>
+                        <div class="data-value text-danger">@Model.StockLevel Units</div>
+                    </div>
+                </div>
+
+                <div class="ai-purge-box mb-5">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="bg-danger text-white rounded-3 p-2 shadow-sm">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h6 class="fw-800 text-dark mb-0 uppercase">Neural Tracking Termination</h6>
+                    </div>
+                    <p class="text-secondary mb-0 leading-relaxed">
+                        Deletion will terminate the AI Agent's monitoring of this SKU. 
+                        <strong>Prediction Log:</strong> "@Model.AIStockPrediction" will be permanently purged from the Roorkee database.
+                    </p>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                    <a href="/Inventory" class="btn-abort">
+                        <i class="fas fa-chevron-left me-2"></i>Abort Deletion
+                    </a>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn-purge">
+                            CONFIRM DATA PURGE <i class="fas fa-trash-can ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <small class="text-muted fw-bold uppercase" style="letter-spacing: 1px;">EAPRO Titan OS • Secure Erasure Protocol Active</small>
+            </div>
+
+        </div>
+    </div>
+</div>

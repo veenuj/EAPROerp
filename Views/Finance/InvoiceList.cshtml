@@ -1,0 +1,178 @@
+@model IEnumerable<EaproERP.Models.Invoice>
+@{ ViewData["Title"] = "Billing History"; }
+
+<style>
+    /* Screen Styling */
+    .invoice-card { 
+        background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; 
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+    .invoice-card:hover { border-color: var(--eapro-red); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.05); }
+    .gst-tag { font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; }
+    .tag-gst { background: #DCFCE7; color: #15803D; }
+    .tag-commercial { background: #F1F5F9; color: #475569; }
+    .status-unpaid { color: #D32F2F; background: #FEE2E2; }
+    .status-paid { color: #15803D; background: #DCFCE7; }
+
+    /* --- Print Logic --- */
+    #printableInvoice { display: none; }
+
+    @@media print {
+        body * { visibility: hidden; }
+        #printableInvoice, #printableInvoice * { visibility: visible; }
+        #printableInvoice { 
+            display: block !important; 
+            position: absolute; left: 0; top: 0; width: 100%; 
+            padding: 40px; color: #000;
+        }
+        .no-print { display: none !important; }
+    }
+
+    /* Standard Bill UI Design */
+    .bill-header { border-bottom: 3px solid #D32F2F; padding-bottom: 20px; margin-bottom: 30px; }
+    .bill-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .bill-table th { background: #f8f9fa; border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+    .bill-table td { border: 1px solid #dee2e6; padding: 12px; }
+</style>
+
+<div class="py-4 no-print">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-800 text-dark mb-0">Billing <span class="text-danger">Vault</span></h2>
+            <small class="text-muted fw-bold font-monospace">FIN_RECORDS // TOTAL: @Model.Count()</small>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <a asp-action="PaymentSummary" target="_blank" class="btn btn-outline-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-lock me-2"></i>Payment Summary Ledger
+            </a>
+
+            <a asp-action="CreateInvoice" class="btn btn-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-plus me-2"></i>New Invoice
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var inv in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="invoice-card p-4 h-100 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="gst-tag @(inv.IsGstInvoice ? "tag-gst" : "tag-commercial")">
+                                @(inv.IsGstInvoice ? "GST_INVOICE" : "COMMERCIAL_BILL")
+                            </span>
+                            <div class="fw-800 text-dark mt-2">@inv.InvoiceNumber</div>
+                            <small class="text-muted fw-bold">@inv.BillingDate.ToString("dd MMM yyyy")</small>
+                        </div>
+                        <span class="badge @(inv.Status == "Paid" ? "status-paid" : "status-unpaid") rounded-pill px-3 py-2">
+                            @inv.Status?.ToUpper()
+                        </span>
+                    </div>
+
+                    <div class="border-top border-bottom py-3 my-3">
+                        <div class="small text-muted fw-bold uppercase" style="font-size: 0.6rem;">Client</div>
+                        <div class="fw-bold text-dark truncate">@inv.CustomerName</div>
+                        @if (inv.IsGstInvoice) {
+                            <div class="text-primary small fw-bold font-monospace mt-1">GSTIN: @inv.CustomerGSTIN</div>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <div class="small text-muted fw-bold" style="font-size: 0.6rem;">Total Amount</div>
+                            <div class="h4 fw-800 mb-0 text-dark">₹@inv.TotalAmount.ToString("N2")</div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            @if (inv.Status == "Unpaid")
+                            {
+                                <a asp-action="Pay" asp-route-id="@inv.Id" class="btn btn-sm btn-success rounded-pill px-3 fw-800">
+                                    <i class="fas fa-indian-rupee-sign me-1"></i> PAY
+                                </a>
+                            }
+                            <button class="btn btn-sm btn-outline-danger border-0 fw-800" 
+                                    onclick="printInvoice('@inv.InvoiceNumber', '@inv.CustomerName', '@inv.CustomerGSTIN', '@inv.BaseAmount', '@inv.TaxAmount', '@inv.TotalAmount', '@inv.IsGstInvoice')">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="printableInvoice">
+    <div class="bill-header d-flex justify-content-between">
+        <div>
+            <h1 style="color:#D32F2F; font-weight:800; margin:0;">EAPRO</h1>
+            <p style="margin:0; font-weight:bold;">Titan Manufacturing Node: Roorkee</p>
+            <p style="font-size:12px;">GSTIN: 05AAACE1234F1Z1</p>
+        </div>
+        <div class="text-end">
+            <h3 id="p-type">TAX INVOICE</h3>
+            <p>Invoice #: <span id="p-invNum" class="fw-bold"></span></p>
+            <p>Date: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-6">
+            <h6 class="text-muted text-uppercase fw-bold">Billed To:</h6>
+            <h4 id="p-clientName" class="fw-bold"></h4>
+            <p id="p-clientGst"></p>
+        </div>
+    </div>
+
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th class="text-end">Base Amount</th>
+                <th class="text-end">GST Amount</th>
+                <th class="text-end">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Solar System / Components Supply</td>
+                <td class="text-end" id="p-base"></td>
+                <td class="text-end" id="p-tax"></td>
+                <td class="text-end fw-bold" id="p-total"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row mt-5">
+        <div class="col-7">
+            <p class="small">**Terms:** This is a computer-generated invoice. No signature required.</p>
+        </div>
+        <div class="col-5 text-end">
+            <div class="border-top pt-2">
+                <p>Authorized Signatory</p>
+                <br><br>
+                <p class="fw-bold">EAPRO TITAN OS</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function printInvoice(num, client, gstin, base, tax, total, isGst) {
+            document.getElementById('p-invNum').innerText = num;
+            document.getElementById('p-clientName').innerText = client;
+            document.getElementById('p-clientGst').innerText = gstin ? "GSTIN: " + gstin : "Non-GST Commercial Bill";
+            document.getElementById('p-type').innerText = (isGst === 'True' || isGst === true) ? "TAX INVOICE" : "COMMERCIAL BILL";
+            
+            document.getElementById('p-base').innerText = "₹" + parseFloat(base).toLocaleString('en-IN');
+            document.getElementById('p-tax').innerText = "₹" + parseFloat(tax).toLocaleString('en-IN');
+            document.getElementById('p-total').innerText = "₹" + parseFloat(total).toLocaleString('en-IN');
+
+            window.print();
+        }
+    </script>
+}

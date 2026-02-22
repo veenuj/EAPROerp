@@ -1,0 +1,42 @@
+@model EaproERP.Models.Employee
+@{ 
+    ViewData["Title"] = "Offboard Employee"; 
+    decimal safeBonus = Model.Bonus ?? 0m;
+    decimal safeTotalPay = Model.BaseSalary + safeBonus;
+}
+
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card border-danger shadow-lg" style="border-radius: 20px; overflow: hidden;">
+        <div class="card-header bg-danger text-white p-4 text-center">
+            <i class="fas fa-triangle-exclamation fa-3x mb-3"></i>
+            <h3 class="fw-bold mb-0">Confirm Offboarding</h3>
+            <p class="text-white-50 mb-0">This action cannot be undone.</p>
+        </div>
+        <div class="card-body p-5">
+            <h4 class="fw-bold text-center mb-4">Are you sure you want to terminate <span class="text-danger">@Model.Name</span>?</h4>
+            
+            <div class="bg-light p-4 rounded-4 mb-4 border">
+                <div class="row mb-2">
+                    <div class="col-5 text-muted fw-bold">Employee ID</div>
+                    <div class="col-7 fw-bold">#EMP-@Model.Id.ToString("D4")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5 text-muted fw-bold">Department</div>
+                    <div class="col-7 fw-bold">@Model.Department</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5 text-muted fw-bold">Current Pay</div>
+                    <div class="col-7 fw-bold text-success">₹@safeTotalPay.ToString("N0")</div>
+                </div>
+            </div>
+
+            <form asp-action="Delete" class="d-flex gap-3">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger btn-lg flex-grow-1 fw-bold rounded-pill shadow-sm">
+                    <i class="fas fa-user-xmark me-2"></i> Terminate Record
+                </button>
+                <a href="/Payroll" class="btn btn-light btn-lg flex-grow-1 fw-bold rounded-pill border">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

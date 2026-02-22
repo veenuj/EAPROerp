@@ -1,0 +1,341 @@
+﻿@{
+    ViewData["Title"] = "EAPRO Titan OS | Command Center";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --eapro-red-bright: #FF3131;
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --dark-bg: #050505;
+        --accent-cyan: #00F2FE;
+    }
+
+    body { 
+        background-color: var(--dark-bg); 
+        background-image: 
+            radial-gradient(circle at 0% 0%, rgba(211, 47, 47, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 100% 100%, rgba(0, 242, 254, 0.03) 0%, transparent 40%);
+        font-family: 'Outfit', sans-serif; 
+        color: #fff; 
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    /* --- Futuristic Command Header --- */
+    .titan-header {
+        padding: 3rem 4rem;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+        border-bottom: 1px solid var(--glass-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        margin-bottom: 3rem;
+    }
+
+    .brand-group h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -3px;
+        margin: 0;
+        text-shadow: 0 0 20px rgba(211, 47, 47, 0.3);
+    }
+
+    .os-version {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: var(--eapro-red-bright);
+        letter-spacing: 3px;
+        font-weight: 700;
+    }
+
+    /* --- Status Hub (Right Side) --- */
+    .status-hub {
+        display: flex;
+        gap: 30px;
+    }
+
+    .hub-item {
+        text-align: right;
+    }
+
+    .hub-label { font-size: 0.6rem; text-transform: uppercase; color: #64748B; letter-spacing: 1.5px; font-weight: 800; }
+    .hub-value { font-size: 1.2rem; font-weight: 700; display: block; }
+
+    /* --- The Bento Matrix --- */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 24px;
+        padding: 0 4rem 4rem 4rem;
+    }
+
+    .bento-card {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 28px;
+        padding: 2rem;
+        transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .bento-card:hover {
+        background: rgba(255,255,255,0.05);
+        border-color: var(--eapro-red);
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Sharp Inner Corner Detail */
+    .bento-card::before {
+        content: ''; position: absolute; top: 0; right: 0;
+        width: 40px; height: 40px;
+        background: linear-gradient(45deg, transparent 50%, rgba(211, 47, 47, 0.2) 50%);
+    }
+
+    /* --- Terminal Component --- */
+    .terminal-output {
+        font-family: 'JetBrains Mono', monospace;
+        color: #00FF41;
+        background: #000;
+        padding: 1.5rem;
+        border-radius: 16px;
+        font-size: 0.9rem;
+        border-left: 4px solid var(--eapro-red);
+        line-height: 1.6;
+        box-shadow: inset 0 0 20px rgba(0,255,65,0.05);
+    }
+
+    /* --- Metric Grid --- */
+    .mini-metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 2rem;
+    }
+
+    .m-box {
+        background: rgba(255,255,255,0.03);
+        padding: 1rem;
+        border-radius: 16px;
+        border: 1px solid var(--glass-border);
+    }
+
+    /* --- Navigation Pill Buttons --- */
+    .nav-link-pill {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 1.25rem;
+        background: rgba(255,255,255,0.02);
+        border-radius: 20px;
+        border: 1px solid var(--glass-border);
+        text-decoration: none !important;
+        color: #fff;
+        transition: 0.3s;
+    }
+
+    .nav-link-pill:hover {
+        background: var(--eapro-red);
+        border-color: #fff;
+        transform: translateX(10px);
+    }
+
+    /* --- Chart Container --- */
+    #productionChart { height: 160px !important; }
+
+    /* --- Animations --- */
+    .pulse-dot {
+        height: 8px; width: 8px; border-radius: 50%;
+        background: #00FF41; display: inline-block;
+        box-shadow: 0 0 10px #00FF41;
+        margin-right: 8px;
+    }
+
+    @@keyframes blink { 50% { opacity: 0; } }
+    .cursor { animation: blink 1s step-end infinite; }
+</style>
+
+
+
+<header class="titan-header">
+    <div class="brand-group">
+        <div class="os-version">NEURAL_ERP_v5.0</div>
+        <h1>EAPRO <span style="color: var(--eapro-red);">TITAN</span></h1>
+    </div>
+
+    <div class="status-hub">
+        <div class="hub-item">
+            <span class="hub-label">Financial Volume</span>
+            <span class="hub-value">₹142.8 <small class="text-white-50">CR</small></span>
+        </div>
+        <div class="hub-item">
+            <span class="hub-label">Intelligence Core</span>
+            <span class="hub-value" style="color: var(--eapro-red-bright);">CONNECTED</span>
+        </div>
+        <div class="hub-item d-flex align-items-center">
+            <span class="pulse-dot"></span>
+            <span class="fw-bold small">SYNCING_LOCAL_S04</span>
+        </div>
+    </div>
+</header>
+
+<main class="bento-grid">
+    
+    <section class="bento-card" style="grid-column: span 8;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-800 mb-0 uppercase letter-spacing-2" style="font-size: 0.8rem;">
+                <i class="fas fa-terminal me-2 text-danger"></i>Neural Logistics Thread
+            </h5>
+            <span class="text-white-50 small font-monospace">ROORKEE_PLANT_NODE_S04</span>
+        </div>
+        
+        <div class="terminal-output">
+            <span id="typewriter">Initiating secure handshake...</span><span class="cursor">_</span>
+        </div>
+
+        <div class="mini-metrics">
+            <div class="m-box">
+                <span class="hub-label">Efficiency</span>
+                <div class="fw-800 fs-5 text-info">99.2%</div>
+            </div>
+            <div class="m-box">
+                <span class="hub-label">DSP_Load</span>
+                <div class="fw-800 fs-5 text-success">88%</div>
+            </div>
+            <div class="m-box">
+                <span class="hub-label">Thermal</span>
+                <div class="fw-800 fs-5 text-warning">24°C</div>
+            </div>
+            <div class="m-box">
+                <span class="hub-label">Sync</span>
+                <div class="fw-800 fs-5">0.4ms</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bento-card" style="grid-column: span 4;">
+        <h5 class="fw-800 mb-4 uppercase letter-spacing-2" style="font-size: 0.8rem;">Production Flux</h5>
+        <canvas id="productionChart"></canvas>
+        <div class="mt-4 p-3 rounded-4 bg-white bg-opacity-5 border border-white border-opacity-5">
+            <div class="d-flex justify-content-between">
+                <span class="small fw-bold">Live Throughput</span>
+                <span class="text-success fw-bold small">+14.2%</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bento-card" style="grid-column: span 9;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-800 mb-0 uppercase letter-spacing-2" style="font-size: 0.8rem;">Operational Staff Matrix</h5>
+            <a href="/Payroll/AttendanceLogs" class="badge bg-danger text-white rounded-pill text-decoration-none px-3">FULL DATABASE</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0 text-white" style="font-size: 0.9rem;">
+                <thead>
+                    <tr class="hub-label border-bottom border-white border-opacity-5">
+                        <th class="pb-3">Executive</th>
+                        <th class="pb-3">Assignment</th>
+                        <th class="pb-3">Node Status</th>
+                        <th class="pb-3 text-end">Last Scan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-danger text-white rounded-3 px-2 py-1 fw-800">AD</div>
+                                <div class="fw-700">Anuj Dhiman</div>
+                            </div>
+                        </td>
+                        <td class="text-white-50">Lead Architect (AI)</td>
+                        <td><span class="badge bg-success bg-opacity-10 text-success fw-800">ACTIVE_UPLINK</span></td>
+                        <td class="text-end font-monospace text-muted">09:14:22</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <aside class="d-flex flex-column gap-3" style="grid-column: span 3;">
+        <a href="/Inventory" class="nav-link-pill">
+            <div class="bg-white bg-opacity-5 p-3 rounded-3 text-danger"><i class="fas fa-warehouse"></i></div>
+            <div class="flex-grow-1"><h6 class="fw-800 mb-0">Inventory</h6><small class="text-white-50">Node S04 Hub</small></div>
+        </a>
+        <a href="/Dealers" class="nav-link-pill">
+            <div class="bg-white bg-opacity-5 p-3 rounded-3 text-warning"><i class="fas fa-handshake"></i></div>
+            <div class="flex-grow-1"><h6 class="fw-800 mb-0">Dealers</h6><small class="text-white-50">Global Network</small></div>
+        </a>
+        <a href="/SolarProjects" class="nav-link-pill">
+            <div class="bg-white bg-opacity-5 p-3 rounded-3 text-info"><i class="fas fa-bolt"></i></div>
+            <div class="flex-grow-1"><h6 class="fw-800 mb-0">Projects</h6><small class="text-white-50">Live Deployments</small></div>
+        </a>
+    </aside>
+</main>
+
+@section Scripts {
+    <script>
+        // 1. High-Precision Flow Graph
+        const ctx = document.getElementById('productionChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, 'rgba(211, 47, 47, 0.4)');
+        gradient.addColorStop(1, 'rgba(211, 47, 47, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['8am', '12pm', '4pm', '8pm'],
+                datasets: [{
+                    data: [35, 65, 45, 90],
+                    borderColor: '#D32F2F',
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.5,
+                    borderWidth: 4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { display: false }, 
+                    x: { ticks: { color: '#64748B', font: { weight: '800', size: 10 } }, grid: { display: false } } 
+                }
+            }
+        });
+
+        // 2. High-Speed Neural Typewriter
+        const logs = [
+            "Handshake verified. Encryption keys rotated.",
+            "Analyzing Roorkee Plant throughput... DSP stable at 99.8%.",
+            "Mercury PCU Batch #142 passed QC neural verification.",
+            "Syncing Dealer Network: Apex Solar confirmed ₹25L volume.",
+            "Titan OS is healthy. All manufacturing nodes active."
+        ];
+        let i = 0, j = 0, isDeleting = false;
+        const target = document.getElementById('typewriter');
+
+        function loop() {
+            const currentLine = logs[i];
+            if (isDeleting) {
+                target.innerText = currentLine.substring(0, j--);
+                if (j < 0) { isDeleting = false; i = (i + 1) % logs.length; }
+            } else {
+                target.innerText = currentLine.substring(0, j++);
+                if (j > currentLine.length) { isDeleting = true; setTimeout(loop, 4000); return; }
+            }
+            setTimeout(loop, isDeleting ? 20 : 50);
+        }
+        loop();
+    </script>
+}

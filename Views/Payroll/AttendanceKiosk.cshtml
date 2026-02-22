@@ -1,0 +1,249 @@
+@{
+    ViewData["Title"] = "EAPRO Smart Kiosk";
+    Layout = null;
+    
+    // 🛑 Update this to your Mac's IP (e.g., 192.168.1.15) for Mobile connectivity
+    var macIpAddress = "192.168.1.11"; 
+    var port = "5231";
+    var baseUrl = $"http://{macIpAddress}:{port}";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EAPRO Smart Kiosk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root { --eapro-red: #D32F2F; --eapro-dark: #0A0C12; --eapro-surface: #111827; }
+        body { 
+            background: radial-gradient(circle at center, #1F2937 0%, var(--eapro-dark) 100%); 
+            color: white; 
+            font-family: 'Outfit', sans-serif; 
+            overflow: hidden; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        
+        .kiosk-wrapper { text-align: center; max-width: 1100px; width: 100%; padding: 2rem; animation: fadeIn 0.8s ease-out; }
+        
+        .clock-display { font-size: 6.5rem; font-weight: 800; letter-spacing: -3px; color: #fff; line-height: 1; margin-bottom: 0.5rem; }
+        .date-display { font-size: 1.4rem; color: #94A3B8; font-weight: 600; margin-bottom: 3.5rem; text-transform: uppercase; letter-spacing: 4px; }
+
+        .scan-container { 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 40px; 
+            padding: 3rem; 
+            backdrop-filter: blur(25px); 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6); 
+        }
+
+        .scan-container.success-glow { border-color: #10B981; box-shadow: 0 0 60px rgba(16, 185, 129, 0.25); }
+        .scan-container.error-glow { border-color: var(--eapro-red); box-shadow: 0 0 60px rgba(211, 47, 47, 0.25); }
+
+        /* Scanner Styling with Laser Animation */
+        #reader { width: 100%; border-radius: 24px; overflow: hidden; border: 2px solid rgba(255,255,255,0.05) !important; position: relative; }
+        #reader::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--eapro-red);
+            box-shadow: 0 0 15px var(--eapro-red);
+            animation: laserScan 2s infinite linear;
+            z-index: 10;
+        }
+
+        .bio-btn { 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 20px; 
+            padding: 1.25rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            background: rgba(255,255,255,0.03); 
+            margin-bottom: 1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 1.25rem; 
+        }
+        .bio-btn:hover { background: rgba(211, 47, 47, 0.1); border-color: var(--eapro-red); }
+        
+        #qrcode-container { display: none; background: white; padding: 20px; border-radius: 24px; margin: 0 auto; width: fit-content; }
+
+        .kiosk-input { 
+            background: rgba(0, 0, 0, 0.4) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important; 
+            color: white !important; 
+            text-align: center; 
+            border-radius: 18px; 
+            height: 60px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+        .btn-punch { background: var(--eapro-red); color: white; border: none; font-weight: 800; padding: 0 2rem; border-radius: 18px; }
+        
+        #statusMessage { min-height: 80px; margin-top: 2rem; font-weight: 800; }
+        .vertical-divider { border-left: 1px solid rgba(255,255,255,0.06); height: 100%; position: absolute; right: 0; top: 0; }
+
+        @@keyframes laserScan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+        @@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body onclick="document.getElementById('empIdInput').focus()">
+
+    <div class="kiosk-wrapper">
+        <h5 class="text-danger fw-800 mb-1" style="letter-spacing: 5px;">EAPRO GLOBAL</h5>
+        <div class="clock-display" id="clockDisplay">00:00:00</div>
+        <div class="date-display" id="dateDisplay">SYSTEM READY</div>
+
+        <div class="scan-container" id="scanArea">
+            <div class="row g-5">
+                <div class="col-md-4 position-relative">
+                    <label class="text-white-50 fw-bold mb-3 d-block small uppercase">Optical ID Scan</label>
+                    <div id="reader"></div>
+                    <div class="vertical-divider d-none d-md-block"></div>
+                </div>
+                
+                <div class="col-md-4 position-relative">
+                    <label class="text-white-50 fw-bold mb-3 d-block small uppercase">Biometric Hub</label>
+                    <div id="bioOptions">
+                        <div class="bio-btn" onclick="triggerDirectBiometric()">
+                            <i class="fas fa-fingerprint fa-2x text-danger"></i>
+                            <div class="text-start">
+                                <div class="fw-bold">Kiosk Touch ID</div>
+                                <div class="text-white-50 small">Laptop Sensor</div>
+                            </div>
+                        </div>
+                        <div class="bio-btn" onclick="generateMobileAuth()">
+                            <i class="fas fa-qrcode fa-2x text-danger"></i>
+                            <div class="text-start">
+                                <div class="fw-bold">Mobile Link</div>
+                                <div class="text-white-50 small">Smartphone Auth</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="qrcode-container">
+                        <div id="qrcode"></div>
+                        <button class="btn btn-sm btn-link text-danger mt-3 fw-bold text-decoration-none" onclick="resetBioBox()">CANCEL</button>
+                    </div>
+                    <div class="vertical-divider d-none d-md-block"></div>
+                </div>
+
+                <div class="col-md-4 d-flex flex-column justify-content-center">
+                    <label class="text-white-50 fw-bold mb-3 d-block small uppercase">Identity Verification</label>
+                    <div class="input-group mb-2">
+                        <input type="text" id="empIdInput" class="form-control kiosk-input" placeholder="SCAN OR TYPE ID" autocomplete="off">
+                        <button class="btn-punch" type="button" onclick="submitAttendance()">Punch</button>
+                    </div>
+                    <small class="text-white-50 mt-2">Scanner auto-detect active</small>
+                </div>
+            </div>
+
+            <div id="statusMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Live Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clockDisplay').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+            document.getElementById('dateDisplay').innerText = now.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+        }, 1000);
+
+        // 2. Optical Scanner Logic (Injects into Input)
+        function onScanSuccess(decodedText) {
+            const inputField = document.getElementById('empIdInput');
+            inputField.value = decodedText; // Insert scanned ID into the input field
+            
+            // Visual feedback that the scanner worked
+            inputField.style.borderColor = "#10B981";
+            
+            submitAttendance(); // Automatically process the punch
+        }
+        const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 20, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess);
+
+        // 3. Direct Biometric Access
+        async function triggerDirectBiometric() {
+            if (!window.PublicKeyCredential) return alert("Hardware Sensor Not Detected");
+            msgDiv.innerHTML = `<span class="text-white fa-fade"><i class="fas fa-fingerprint text-danger me-2"></i>WAITING FOR SENSOR TOUCH...</span>`;
+            try {
+                const credential = await navigator.credentials.get({
+                    publicKey: { challenge: new Uint8Array([1, 2, 3, 4]), userVerification: "required" }
+                });
+                if (credential) submitAttendance("BIO_DIRECT_AUTH");
+            } catch (err) { msgDiv.innerHTML = ''; }
+        }
+
+        // 4. Mobile QR Handshake
+        let pollInterval;
+        function generateMobileAuth() {
+            const token = "EAP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            const authUrl = "@baseUrl" + "/Payroll/MobileAuth?token=" + token;
+            
+            document.getElementById('qrcode').innerHTML = "";
+            new QRCode(document.getElementById('qrcode'), { text: authUrl, width: 180, height: 180 });
+            
+            document.getElementById('bioOptions').style.display = "none";
+            document.getElementById('qrcode-container').style.display = "block";
+            
+            pollInterval = setInterval(async () => {
+                const response = await fetch(`/Payroll/CheckMobileStatus?token=${token}`);
+                const result = await response.json();
+                if (result.verified) { clearInterval(pollInterval); submitAttendance(result.employeeCode); }
+            }, 2500);
+        }
+
+        function resetBioBox() {
+            clearInterval(pollInterval);
+            document.getElementById('bioOptions').style.display = "block";
+            document.getElementById('qrcode-container').style.display = "none";
+            msgDiv.innerHTML = "";
+        }
+
+        // 5. Unified Submission Engine
+        const input = document.getElementById('empIdInput');
+        const scanArea = document.getElementById('scanArea');
+        const msgDiv = document.getElementById('statusMessage');
+
+        input.addEventListener('keypress', (e) => { if(e.key === 'Enter') submitAttendance(); });
+
+        async function submitAttendance(verifiedCode = null) {
+            const barcode = verifiedCode || input.value.trim();
+            if (!barcode) return;
+            
+            input.value = '';
+            resetBioBox();
+            msgDiv.innerHTML = `<div class="spinner-grow text-danger spinner-grow-sm me-3"></div> VERIFYING IDENTITY...`;
+
+            try {
+                const response = await fetch('/Payroll/ProcessPunch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ barcode: barcode })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    scanArea.className = 'scan-container success-glow';
+                    msgDiv.innerHTML = `<div class="text-center"><h3 class="text-success fw-800 mb-0">${data.name}</h3><span class="text-white-50 small uppercase">PUNCH SUCCESS AT ${data.time}</span></div>`;
+                } else {
+                    scanArea.className = 'scan-container error-glow';
+                    msgDiv.innerHTML = `<span class="text-danger fw-800"><i class="fas fa-exclamation-triangle me-2"></i>${data.message.toUpperCase()}</span>`;
+                }
+                setTimeout(() => { scanArea.className = 'scan-container'; msgDiv.innerHTML = ''; input.style.borderColor = "rgba(255,255,255,0.1)"; }, 4000);
+            } catch (err) { msgDiv.innerHTML = 'CONNECTION LOST'; }
+        }
+    </script>
+</body>
+</html>

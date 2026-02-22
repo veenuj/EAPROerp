@@ -1,0 +1,42 @@
+@model EaproERP.Models.Product
+@{ ViewData["Title"] = "Edit Product"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Edit Product: @Model.Name</h3>
+    <a href="/Inventory" class="btn btn-secondary">Back to List</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Product Name</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Category</label>
+                <select asp-for="Category" class="form-select" required>
+                    <option value="Inverter">On-Grid / Off-Grid Inverter</option>
+                    <option value="Battery">Solar Battery</option>
+                    <option value="Solar Panel">Solar Module</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Current Stock Level</label>
+                    <input asp-for="StockLevel" type="number" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Unit Price (INR)</label>
+                    <input asp-for="Price" type="number" step="0.01" class="form-control" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Update AI Data & Save</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@model EaproERP.Models.Invoice
+@{ ViewData["Title"] = "Secure Payment Portal"; }
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-4">
+                    <h4 class="mb-0 fw-800">Settle <span class="text-danger">Invoice</span></h4>
+                    <small class="text-muted">ID: @Model.InvoiceNumber</small>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-muted fw-bold">Amount Due:</span>
+                        <h3 class="fw-800 text-dark">₹@Model.TotalAmount.ToString("N2")</h3>
+                    </div>
+
+                    <form asp-action="ProcessPayment">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="mb-3">
+                            <label class="small fw-800 text-muted uppercase">Payment Mode</label>
+                            <select name="paymentMethod" class="form-select border-0 bg-light py-3 rounded-3 fw-bold">
+                                <option value="UPI">UPI / G-Pay</option>
+                                <option value="Bank Transfer">NEFT / RTGS</option>
+                                <option value="Cash">Cash Collection</option>
+                                <option value="Cheque">PDC Cheque</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="small fw-800 text-muted uppercase">Reference/UTR Number</label>
+                            <input type="text" name="transactionId" class="form-control border-0 bg-light py-3 rounded-3" placeholder="Enter Bank Ref ID" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100 py-3 rounded-pill fw-800 shadow">
+                            CONFIRM_PAYMENT_ENTRY
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

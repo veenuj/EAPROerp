@@ -1,0 +1,117 @@
+@model IEnumerable<EaproERP.Models.ProductionLine>
+@{ ViewData["Title"] = "Manufacturing Hub"; }
+
+<style>
+    :root { --eapro-red: #D32F2F; --slate: #1E293B; --border: #E2E8F0; }
+    .hub-wrapper { animation: fadeIn 0.4s ease-out; max-width: 1200px; margin: 0 auto; }
+    
+    .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
+    .status-active { background: #DCFCE7; color: #15803D; }
+    .status-maint { background: #FEF3C7; color: #B45309; }
+    .status-offline { background: #FEE2E2; color: #B91C1C; }
+
+    .line-row { 
+        background: #fff; border: 1px solid var(--border); border-radius: 12px; 
+        padding: 1.25rem; transition: 0.2s; margin-bottom: 12px;
+    }
+    .line-row:hover { border-color: var(--eapro-red); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+    .progress-sm { height: 6px; background: #F1F5F9; border-radius: 10px; overflow: hidden; width: 120px; }
+    .progress-fill { height: 100%; background: var(--eapro-red); border-radius: 10px; transition: width 0.5s ease-in-out; }
+
+    .metric-label { font-size: 0.65rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; display: block; }
+    .metric-value { font-size: 0.95rem; font-weight: 700; color: var(--slate); }
+
+    /* SignalR Live Indicator */
+    .live-pulse { width: 8px; height: 8px; background: #00E676; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 8px #00E676; }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+</style>
+
+<div class="hub-wrapper py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="fw-800 text-dark mb-0">Production <span class="text-danger">Control</span></h2>
+            <div class="d-flex align-items-center">
+                <span class="live-pulse"></span>
+                <small class="text-muted fw-bold font-monospace">ROORKEE_PLANT // LIVE_TELEMETRY_ACTIVE</small>
+            </div>
+        </div>
+        <a asp-action="Create" class="btn btn-dark rounded-2 px-4 fw-bold shadow-sm">Initialize Line</a>
+    </div>
+
+    @foreach (var line in Model) {
+        var progress = line.DailyTarget > 0 ? (line.UnitsCompleted * 100 / line.DailyTarget) : 0;
+        <div class="line-row d-flex align-items-center justify-content-between">
+            <div style="width: 200px;">
+                <span class="metric-label">Line Identifier</span>
+                <span class="metric-value">@line.LineName</span>
+                <div class="mt-1"><span class="status-badge status-@(line.Status.ToLower())">@line.Status</span></div>
+            </div>
+            
+            <div style="width: 180px;">
+                <span class="metric-label">Live Machine Temp</span>
+                <span class="metric-value text-danger" id="temp-@line.Id">--°C</span>
+            </div>
+
+            <div style="width: 180px;">
+                <span class="metric-label">Yield Progress (@progress%)</span>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="progress-sm">
+                        <div class="progress-fill" id="bar-@line.Id" style="width: @progress%"></div>
+                    </div>
+                    <span class="fw-bold small">@line.UnitsCompleted/@line.DailyTarget</span>
+                </div>
+            </div>
+
+            <div style="width: 120px;">
+                <span class="metric-label">Current Load</span>
+                <span class="metric-value" id="load-@line.Id">--%</span>
+            </div>
+
+            <div class="text-end">
+                <form asp-action="Delete" asp-route-id="@line.Id" method="post">
+                    <button type="submit" class="btn btn-sm btn-outline-danger border-0 fw-bold" onclick="return confirm('Shutdown Line?')">SHUTDOWN</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+    <script>
+        // 2. Establish connection to the Titan OS Factory Hub
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/factoryHub")
+            .withAutomaticReconnect()
+            .build();
+
+        // 3. Listen for the 'ReceiveTelemetry' broadcast from the Background Service
+        connection.on("ReceiveTelemetry", (data) => {
+            console.log("Neural Link Data Received:", data);
+
+            // In this example, we'll update Line 1 (Line Alpha-1) with the live data
+            // In a real scenario, 'data' would contain the LineId
+            const lineId = 1; 
+
+            const tempEl = document.getElementById(`temp-${lineId}`);
+            const loadEl = document.getElementById(`load-${lineId}`);
+            const barEl = document.getElementById(`bar-${lineId}`);
+
+            if (tempEl) tempEl.innerText = `${data.temp}°C`;
+            if (loadEl) loadEl.innerText = `${data.load}%`;
+            if (barEl) {
+                // If it's a "Simulation", let's move the bar slightly
+                // In reality, you'd use data.unitsCompleted
+                console.log("Updating bar for load:", data.load);
+            }
+        });
+
+        // 4. Start the connection
+        connection.start().then(() => {
+            console.log("Titan Neural Link: CONNECTED");
+        }).catch(err => console.error("Neural Link Failed:", err.toString()));
+    </script>
+}

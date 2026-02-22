@@ -1,0 +1,307 @@
+@model IEnumerable<EaproERP.Models.Candidate>
+@{ ViewData["Title"] = "Talent Pipeline"; }
+
+<style>
+    :root {
+        --titan-red: #D32F2F;
+        --titan-dark: #0F172A;
+        --titan-border: #E2E8F0;
+        --titan-bg: #F8FAFC;
+    }
+
+    /* --- Web UI Premium Styling --- */
+    .pipeline-container { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    .candidate-card { 
+        background: #ffffff; 
+        border: 1px solid var(--titan-border); 
+        border-radius: 24px; 
+        padding: 2.2rem; 
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .candidate-card:hover { 
+        transform: translateY(-6px); 
+        box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.08);
+        border-color: var(--titan-red);
+    }
+
+    /* --- Stepper Enhancement --- */
+    .stepper-container { position: relative; margin-top: 35px; padding: 0 10px; }
+    
+    .stepper-track {
+        position: absolute; top: 18px; left: 0; width: 100%; 
+        height: 4px; background: var(--titan-bg); border-radius: 4px; z-index: 0; 
+    }
+    
+    .stepper-fill {
+        position: absolute; top: 18px; left: 0; height: 4px; 
+        background: var(--titan-red); border-radius: 4px; z-index: 0; 
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stepper-nodes {
+        display: flex; justify-content: space-between; position: relative; z-index: 1;
+    }
+
+    .step-node { display: flex; flex-direction: column; align-items: center; width: 20%; }
+    
+    .step-dot { 
+        width: 40px; height: 40px; background: #fff; border: 3px solid var(--titan-border); 
+        border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+        font-size: 0.8rem; font-weight: 800; color: #94a3b8; transition: 0.4s ease;
+    }
+    
+    .step-node.active .step-dot { 
+        border-color: var(--titan-red); color: var(--titan-red); 
+        background: #fff; transform: scale(1.15); box-shadow: 0 0 15px rgba(211, 47, 47, 0.2); 
+    }
+    
+    .step-node.completed .step-dot { background: var(--titan-red); border-color: var(--titan-red); color: #fff; }
+    
+    .step-label { 
+        font-size: 0.65rem; font-weight: 800; text-transform: uppercase; 
+        margin-top: 12px; color: #94a3b8; letter-spacing: 0.5px; 
+    }
+    
+    .step-node.active .step-label { color: var(--titan-dark); }
+
+    /* --- FIXED RAZOR SYNTAX FOR MEDIA QUERY --- */
+    #offerTemplate { display: none; }
+
+    @@media print {
+        @@page { size: A4; margin: 0; }
+        body * { visibility: hidden; }
+        #offerTemplate, #offerTemplate * { visibility: visible; }
+        #offerTemplate { 
+            display: block !important; 
+            position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; 
+            padding: 25mm; background: white; color: #1a1a1a;
+            font-family: 'Times New Roman', serif; line-height: 1.6;
+        }
+        .no-print { display: none !important; }
+    }
+
+    .letterhead-bar { height: 8px; background: #D32F2F; margin-bottom: 40px; }
+    .letter-body { font-size: 11pt; text-align: justify; }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="py-4 pipeline-container no-print">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-800 text-dark mb-0">Hiring <span class="text-danger">Pipeline</span></h2>
+            <p class="text-muted fw-bold small uppercase mb-0"><i class="fas fa-network-wired me-2"></i>Titan Recruitment Engine v5.0</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <a asp-action="CandidateArchive" class="btn btn-outline-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-box-archive me-2"></i>View Archive
+            </a>
+            <a asp-action="Create" class="btn btn-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i>Source New Talent
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var person in Model)
+        {
+            <div class="col-xl-6">
+                <div class="candidate-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                                <i class="fas fa-user-tie text-muted fs-4"></i>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@person.Id" class="text-decoration-none">
+                                    <h4 class="fw-800 mb-0 text-dark transition-hover" style="letter-spacing: -0.5px;">@person.Name</h4>
+                                </a>
+                                <small class="text-danger fw-800 font-monospace" style="font-size: 0.75rem;">@person.Position.ToUpper()</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <form id="reject-form-@person.Id" asp-action="RejectCandidate" method="post" style="display:none;">
+                                <input type="hidden" name="id" value="@person.Id" />
+                            </form>
+                            <button type="button" onclick="confirmReject(@person.Id, '@person.Name')" class="btn btn-sm btn-light border rounded-pill px-3 shadow-sm text-danger" title="Reject Candidate">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                            @if (person.CurrentStep == 5)
+                            {
+                                <button onclick="generateOffer('@person.Id', '@person.Name', '@person.Position')" class="btn btn-success rounded-pill px-4 py-2 fw-800 shadow-sm">
+                                    <i class="fas fa-file-pdf me-2"></i> Finalize Offer
+                                </button>
+                            }
+                            else
+                            {
+                                <form asp-action="Advance" method="post">
+                                    <input type="hidden" name="id" value="@person.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-dark rounded-pill px-4 py-2 fw-800 shadow-sm">
+                                        Next Stage <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="stepper-container">
+                        <div class="stepper-track"></div>
+                        <div class="stepper-fill" style="width: @((person.CurrentStep - 1) * 25)%"></div>
+                        
+                        <div class="stepper-nodes">
+                            @{
+                                var stepNames = new[] { "Applied", "Tech", "HR", "Mgmt", "Offer" };
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="step-node @(person.CurrentStep > i ? "completed" : (person.CurrentStep == i ? "active" : ""))">
+                                        <div class="step-dot">
+                                            @if(person.CurrentStep > i) { <i class="fas fa-check"></i> } else { @i }
+                                        </div>
+                                        <span class="step-label">@stepNames[i-1]</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="offerTemplate">
+    <div class="letterhead-bar"></div>
+    <div class="d-flex justify-content-between align-items-start mb-5">
+        <div>
+            <h1 style="color:#D32F2F; font-weight:900; margin:0; font-size: 28pt; letter-spacing: -1px;">EAPRO</h1>
+            <p style="margin:0; font-weight:bold; font-size: 10pt; color: #555;">SOLAR IIoT & RENEWABLE ENERGY SYSTEMS</p>
+        </div>
+        <div class="text-end" style="font-size: 9pt; color: #555;">
+            <p class="mb-0">Unit-IV, Roorkee-Haridwar Highway</p>
+            <p class="mb-0">Uttarakhand, India - 247667</p>
+            <p class="mb-0">www.eapro.in</p>
+        </div>
+    </div>
+
+    <div class="letter-body mt-5">
+        <p><strong>Ref:</strong> EAP/HR/OFFER/@DateTime.Now.Year/@(new Random().Next(1000, 9999))</p>
+        <p><strong>Date:</strong> @DateTime.Now.ToString("dd MMMM, yyyy")</p>
+
+        <div class="mt-4 mb-5">
+            <p class="mb-0">To,</p>
+            <h4 style="margin:0; font-weight:bold;"><span id="off-name">Candidate Name</span></h4>
+            <p>Subject: Letter of Intent and Employment Offer</p>
+        </div>
+
+        <p>Dear <span id="off-name-sal">Candidate</span>,</p>
+        <p>We are pleased to offer you the position of <strong><span id="off-pos">Position</span></strong> at Eapro. Your technical background aligns perfectly with our mission in Solar Power Conversion and Advanced IIoT systems.</p>
+        
+        <p><strong>Key Terms of Employment:</strong></p>
+        <ul>
+            <li><strong>Designation:</strong> <span id="off-pos-list">Position</span></li>
+            <li><strong>Work Location:</strong> Roorkee Manufacturing Unit</li>
+        </ul>
+
+        <p class="mt-4">This offer is subject to background verification. Detailed terms will be provided in your Appointment Letter upon joining.</p>
+        <p>We look forward to a mutually beneficial association.</p>
+
+        <div style="margin-top: 60px;">
+            <div class="row">
+                <div class="col-6">
+                    <p class="mb-5">Best Regards,</p>
+                    <p><strong>__________________________</strong><br>
+                    <strong>Authorized Signatory</strong><br>
+                    Human Resources Department</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p class="mb-5">Accepted By,</p>
+                    <p><strong>__________________________</strong><br>
+                    <strong><span id="off-name-sign">Candidate Name</span></strong><br>
+                    Signature & Date</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Reject Candidate Logic
+        function confirmReject(id, name) {
+            Swal.fire({
+                title: 'Disqualify Candidate?',
+                text: `Are you sure you want to reject ${name}? This will remove them from the active pipeline.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#D32F2F', 
+                cancelButtonColor: '#0F172A',
+                confirmButtonText: 'Yes, Reject Candidate'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('reject-form-' + id).submit();
+                }
+            });
+        }
+
+        // Generate Offer & Route to Employee Onboarding
+        function generateOffer(id, name, position) {
+            document.getElementById('off-name').innerText = name;
+            document.getElementById('off-name-sign').innerText = name;
+            document.getElementById('off-name-sal').innerText = name.split(' ')[0];
+            document.getElementById('off-pos').innerText = position;
+            document.getElementById('off-pos-list').innerText = position;
+            
+            window.print();
+
+            setTimeout(function() {
+                Swal.fire({
+                    title: 'Offer Generated!',
+                    text: `Would you like to transfer ${name} into the official Employee Database to finalize onboarding?`,
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#15803D', // Success Green
+                    cancelButtonColor: '#64748b',  // Muted Gray
+                    confirmButtonText: 'Yes, Onboard Employee',
+                    cancelButtonText: 'Not Yet'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 🛑 NEW: Instead of submitting the hidden form, redirect to the Employee Creation page
+                        // Passing the CandidateId in the URL query string
+                        window.location.href = `/Payroll/OnboardCandidate?candidateId=${id}`;
+                    }
+                });
+            }, 1000);
+        }
+
+        // Success Notification Listener
+        document.addEventListener("DOMContentLoaded", function() {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                Swal.fire({
+                    title: 'System Update',
+                    text: '@TempData["SuccessMessage"]',
+                    icon: 'success',
+                    confirmButtonColor: '#D32F2F',
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'rounded-4 shadow-lg border',
+                        title: 'fw-800 text-dark',
+                        confirmButton: 'rounded-pill px-4 fw-800'
+                    }
+                });
+                </text>
+            }
+        });
+    </script>
+}

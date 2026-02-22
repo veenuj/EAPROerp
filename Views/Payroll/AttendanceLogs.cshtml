@@ -1,0 +1,223 @@
+@model IEnumerable<EaproERP.Models.AttendanceRecord>
+@{
+    ViewData["Title"] = "Attendance Telemetry";
+    
+    // Quick Stats for the Top Cards
+    var totalToday = Model.Count(x => x.Date == DateTime.Today);
+    var lateToday = Model.Count(x => x.Date == DateTime.Today && x.Status == "Late");
+    var activeShifts = Model.Count(x => x.PunchOutTime == null && x.Date == DateTime.Today);
+}
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --eapro-dark: #0A0C12;
+        --glass-bg: rgba(255, 255, 255, 0.7);
+    }
+
+    .logs-container { animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* Stats Cards */
+    .stat-mini-card {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        transition: 0.3s;
+    }
+    .stat-mini-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+    .stat-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+
+    /* Premium Table Card */
+    .table-card {
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    .custom-table { margin-bottom: 0; border-collapse: separate; border-spacing: 0; }
+    .custom-table thead th {
+        background: #F8FAFC;
+        color: #64748B;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        padding: 1.5rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .custom-table tbody tr { transition: 0.2s; }
+    .custom-table tbody tr:hover { background-color: #F1F5F9; cursor: pointer; }
+    .custom-table td { padding: 1.25rem 1.5rem; vertical-align: middle; border-bottom: 1px solid #f8fafc; }
+
+    /* Status Tags */
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-weight: 800;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .status-ontime { background: #DCFCE7; color: #15803D; }
+    .status-late { background: #FEF3C7; color: #B45309; }
+    .status-active { background: #DBEAFE; color: #1E40AF; }
+
+    /* Profile Circle */
+    .profile-init {
+        width: 42px; height: 42px;
+        background: var(--eapro-dark);
+        color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    .pulse-dot {
+        height: 8px; width: 8px;
+        background-color: #3B82F6;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse 1.5s infinite;
+        margin-right: 8px;
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    @@keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="logs-container py-4">
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="fw-800 text-dark tracking-tight mb-1">Attendance <span class="text-danger">Telemetry</span></h1>
+            <p class="text-muted fw-500">Neural Monitoring & Shift Analysis Dashboard</p>
+        </div>
+        <div class="col-lg-6 text-lg-end">
+            <a href="/Payroll/AttendanceKiosk" target="_blank" class="btn btn-dark rounded-pill px-4 py-2 fw-bold shadow-lg me-2">
+                <i class="fas fa-expand me-2"></i>Terminal View
+            </a>
+            <button class="btn btn-white bg-white border rounded-pill px-4 py-2 fw-bold shadow-sm" onclick="location.reload()">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-mini-card d-flex align-items-center gap-3">
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="text-muted small fw-bold">TOTAL LOGS TODAY</div>
+                    <div class="fs-4 fw-800">@totalToday</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-mini-card d-flex align-items-center gap-3">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-clock"></i></div>
+                <div>
+                    <div class="text-muted small fw-bold">LATE ENTRIES</div>
+                    <div class="fs-4 fw-800">@lateToday</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-mini-card d-flex align-items-center gap-3">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <div class="text-muted small fw-bold">ACTIVE SHIFTS</div>
+                    <div class="fs-4 fw-800">@activeShifts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Timestamp</th>
+                        <th>Employee Identity</th>
+                        <th>Punch Metrics</th>
+                        <th>Operational Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="4" class="text-center py-5 text-muted">No telemetry data recorded for this period.</td></tr>
+                    }
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-800 text-dark">@log.Date.ToString("dd MMM")</div>
+                                <small class="text-muted fw-bold">@log.Date.Year</small>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="profile-init">@(log.Employee?.Name?[0] ?? '?')</div>
+                                    <div>
+                                        <div class="fw-800 text-dark">@(log.Employee?.Name ?? "Unknown")</div>
+                                        <span class="badge bg-light text-muted border-0 fw-bold" style="font-size: 0.65rem;">
+                                            ID: @(log.Employee?.EmployeeCode ?? "N/A")
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-4">
+                                    <div>
+                                        <small class="text-muted d-block fw-bold" style="font-size: 0.6rem;">INBOUND</small>
+                                        <span class="fw-800 text-success">@log.PunchInTime?.ToString(@"hh\:mm")</span>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block fw-bold" style="font-size: 0.6rem;">OUTBOUND</small>
+                                        @if (log.PunchOutTime.HasValue)
+                                        {
+                                            <span class="fw-800 text-danger">@log.PunchOutTime.Value.ToString(@"hh\:mm")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small italic">Processing...</span>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @if (log.PunchOutTime == null && log.Date == DateTime.Today)
+                                {
+                                    <span class="status-badge status-active"><span class="pulse-dot"></span>Active Session</span>
+                                }
+                                else if (log.Status == "Late")
+                                {
+                                    <span class="status-badge status-late"><i class="fas fa-exclamation-circle me-1"></i>Late Entry</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-ontime"><i class="fas fa-check-circle me-1"></i>On Time</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

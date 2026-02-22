@@ -1,0 +1,208 @@
+@model IEnumerable<EaproERP.Models.Invoice>
+@{ Layout = null; }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITAN FINANCE // Transaction Ledger</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --titan-red: #D32F2F;
+            --titan-dark: #0F172A;
+            --titan-gray: #64748B;
+            --border-color: #E2E8F0;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #fdfdfd; 
+            padding: 50px; 
+            color: var(--titan-dark);
+        }
+
+        /* --- Header Section --- */
+        .ledger-header { 
+            border-bottom: 4px solid var(--titan-dark); 
+            padding-bottom: 25px; 
+            margin-bottom: 40px; 
+        }
+        
+        .brand-accent {
+            color: var(--titan-red);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        /* --- Stats Row --- */
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--titan-gray);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* --- Table Styling --- */
+        .table-container {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .table thead {
+            background: var(--titan-dark);
+            color: #fff;
+        }
+
+        .table th {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 18px 15px;
+            border: none;
+        }
+
+        .table td {
+            padding: 15px;
+            font-size: 0.85rem;
+            border-color: #F1F5F9;
+            vertical-align: middle;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+        
+        .badge-status {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+        }
+        .paid { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+        .unpaid { background: #FEE2E2; color: #D32F2F; border: 1px solid #FECACA; }
+
+        /* --- Print Optimization --- */
+        @@media print {
+            body { padding: 20px; background: #fff; }
+            .no-print { display: none !important; }
+            .table-container { border: none; box-shadow: none; }
+            .stat-card { border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ledger-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="fw-800 mb-0" style="letter-spacing: -2px;">TITAN <span class="brand-accent">FINANCE</span></h1>
+            <p class="text-muted fw-600 mb-0 small">Secure Transaction Ledger // Manufacturing Hub: Roorkee</p>
+        </div>
+        <div class="text-end">
+            <div class="fw-800">REF_NODE: @Environment.MachineName</div>
+            <div class="text-muted small fw-bold">DATE: @DateTime.Now.ToString("dd MMM yyyy HH:mm")</div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Gross Receivables</div>
+                <p class="stat-value">₹@Model.Sum(x => x.TotalAmount).ToString("N2")</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="border-left: 5px solid #22C55E;">
+                <div class="stat-label text-success">Total Collected</div>
+                <p class="stat-value text-success">₹@Model.Where(x => x.Status == "Paid").Sum(x => x.TotalAmount).ToString("N2")</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="border-left: 5px solid var(--titan-red);">
+                <div class="stat-label text-danger">Outstanding Balance</div>
+                <p class="stat-value text-danger">₹@Model.Where(x => x.Status != "Paid").Sum(x => x.TotalAmount).ToString("N2")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Invoice ID</th>
+                    <th>Customer / Entity</th>
+                    <th class="text-end">Base (INR)</th>
+                    <th class="text-end">Total Amount</th>
+                    <th class="text-center">Status</th>
+                    <th>Payment Mode</th>
+                    <th>Transaction / UTR</th>
+                    <th>Processing Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inv in Model)
+                {
+                    <tr>
+                        <td class="fw-800 text-muted">@inv.InvoiceNumber</td>
+                        <td>
+                            <div class="fw-bold">@inv.CustomerName</div>
+                            @if(!string.IsNullOrEmpty(inv.CustomerGSTIN)) {
+                                <div class="text-primary mono" style="font-size: 0.6rem;">GST: @inv.CustomerGSTIN</div>
+                            }
+                        </td>
+                        <td class="text-end">@inv.BaseAmount.ToString("N2")</td>
+                        <td class="text-end fw-800">₹@inv.TotalAmount.ToString("N2")</td>
+                        <td class="text-center">
+                            <span class="badge-status @(inv.Status == "Paid" ? "paid" : "unpaid")">
+                                @inv.Status
+                            </span>
+                        </td>
+                        <td>
+                            <i class="fas @(inv.PaymentMethod == "Cash" ? "fa-money-bill-1" : "fa-building-columns") me-2 small text-muted"></i>
+                            @(inv.PaymentMethod ?? "---")
+                        </td>
+                        <td class="mono">@(inv.TransactionId ?? "N/A")</td>
+                        <td class="text-muted small">
+                            @(inv.PaymentDate?.ToString("dd/MM/yy HH:mm") ?? "---")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-5 pt-4 border-top d-flex justify-content-between align-items-center">
+        <div class="small text-muted">
+            <i class="fas fa-shield-halved me-2"></i> This report is cryptographically linked to the Titan ERP Master Node.
+        </div>
+        <div class="no-print">
+            <button onclick="window.print()" class="btn btn-dark rounded-pill px-5 fw-800">
+                <i class="fas fa-print me-2"></i> GENERATE PDF LEDGER
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

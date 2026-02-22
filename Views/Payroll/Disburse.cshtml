@@ -1,0 +1,356 @@
+@model IEnumerable<EaproERP.Models.PayrollViewModel>
+@{ 
+    ViewData["Title"] = "Treasury & Disbursement"; 
+    var history = ViewBag.History as List<EaproERP.Models.SalaryDisbursement>;
+    
+    var currentCycle = Model != null && Model.Any() ? Model.First().Month : DateTime.Now.ToString("MMMM yyyy");
+    var pendingTotal = Model?.Sum(x => x.NetPay) ?? 0;
+    var disbursedTotal = history?.Sum(x => x.NetPayout) ?? 0;
+}
+
+<style>
+    :root {
+        --eapro-red: #D32F2F;
+        --eapro-success: #10B981;
+        --eapro-dark: #0F172A;
+    }
+
+    .disburse-container { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* Summary Cards */
+    .finance-card {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+        transition: 0.3s;
+    }
+    .finance-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+    .card-icon { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+    /* Matrix Table Container */
+    .premium-matrix {
+        background: white;
+        border-radius: 32px;
+        border: 1px solid #edf2f7;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background: #f8fafc;
+        color: #64748b;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .table tbody tr { transition: 0.2s; }
+    .table tbody tr:hover { background: #fcfdfe; }
+    .table td { padding: 1.25rem 1.5rem; vertical-align: middle; border-bottom: 1px solid #f8fafc; }
+
+    /* Professional Badges */
+    .payout-badge {
+        padding: 6px 14px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-pending { background: #fee2e2; color: #b91c1c; }
+    .badge-paid { background: #dcfce7; color: #15803d; }
+
+    /* Action Buttons */
+    .btn-pay {
+        background: var(--eapro-success);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-weight: 800;
+        padding: 10px 20px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        transition: 0.3s;
+    }
+    .btn-pay:hover { background: #059669; transform: scale(1.03); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+
+    .btn-print-mini {
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+        transition: 0.2s;
+    }
+    .btn-print-mini:hover { color: var(--eapro-dark); border-color: var(--eapro-dark); background: #f8fafc; }
+
+    .avatar-vault {
+        width: 44px; height: 44px;
+        background: #1e293b;
+        color: white;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="container-fluid px-lg-5 disburse-container">
+    
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h1 class="fw-800 text-dark mb-1">Treasury <span class="text-danger">Vault</span></h1>
+            <p class="text-muted mb-0 fw-500"><i class="fas fa-calendar-check text-danger me-2"></i>Current Disbursement Cycle: <strong>@currentCycle</strong></p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-action="Logout" class="btn btn-dark rounded-pill px-4 py-2 fw-bold shadow-lg">
+                <i class="fas fa-lock-open me-2"></i>LOCK VAULT
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="finance-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="card-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-wallet"></i></div>
+                    <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger fw-bold">Pending Batch</span>
+                </div>
+                <h3 class="fw-800 text-dark mb-0">₹@pendingTotal.ToString("N0")</h3>
+                <p class="text-muted small mb-0 mt-1">@(Model?.Count() ?? 0) Employees awaiting payout</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="finance-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="card-icon bg-success bg-opacity-10 text-success"><i class="fas fa-check-double"></i></div>
+                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success fw-bold">Settled History</span>
+                </div>
+                <h3 class="fw-800 text-dark mb-0">₹@disbursedTotal.ToString("N0")</h3>
+                <p class="text-muted small mb-0 mt-1">@(history?.Count() ?? 0) Transactions processed this month</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="finance-card bg-dark text-white border-0 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="card-icon bg-white bg-opacity-10 text-white"><i class="fas fa-building"></i></div>
+                    <span class="badge rounded-pill bg-white bg-opacity-10 text-white fw-bold">Eapro Core</span>
+                </div>
+                <h3 class="fw-800 mb-0">Roorkee Unit</h3>
+                <p class="text-white-50 small mb-0 mt-1">Neural ERP Payroll Integration v2.5</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 mb-3 ms-2">
+        <span class="bg-danger rounded-circle" style="width: 8px; height: 8px;"></span>
+        <span class="text-muted fw-800 small uppercase letter-spacing-1">Pending Ledger</span>
+    </div>
+
+    <div class="premium-matrix mb-5">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Employee Information</th>
+                        <th>Work Metrics</th>
+                        <th>Financial Calculation</th>
+                        <th class="text-end pe-4">Verification Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any()) {
+                        <tr><td colspan="4" class="text-center py-5 text-muted">Scanning Treasury... No pending disbursements found.</td></tr>
+                    } else {
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-vault">@(item.Employee?.Name?.Substring(0,1) ?? "?")</div>
+                                        <div>
+                                            <div class="fw-800 text-dark">@item.Employee?.Name</div>
+                                            <small class="text-muted fw-bold">ID: @item.Employee?.EmployeeCode</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-800 text-dark">@item.DaysPresent / 26 Days</div>
+                                    <div class="progress mt-1" style="height: 4px; width: 100px;">
+                                        <div class="progress-bar bg-danger" style="width: @((item.DaysPresent / 26.0) * 100)%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-800 text-dark fs-5">₹@item.NetPay.ToString("N0")</div>
+                                    <small class="text-success fw-bold">Bonus Incl: ₹@((item.Employee?.Bonus ?? 0m).ToString("N0"))</small>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn-print-mini me-2" onclick='prepareAndPrint(@Html.Raw(Json.Serialize(item)))'>
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                    <button class="btn-pay" onclick="processPayment(@item.Employee?.Id, @item.NetPay, @item.DaysPresent, '@item.Month')">
+                                        <i class="fas fa-paper-plane me-2"></i>Disburse
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 mb-3 ms-2">
+        <span class="bg-success rounded-circle" style="width: 8px; height: 8px;"></span>
+        <span class="text-muted fw-800 small uppercase letter-spacing-1">Payment History</span>
+    </div>
+
+    <div class="premium-matrix bg-light bg-opacity-25" style="border: 1px dashed #cbd5e1;">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <tbody>
+                    @if (history == null || !history.Any()) {
+                        <tr><td class="text-center py-4 text-muted small">No transactions recorded in the history vault for this cycle.</td></tr>
+                    } else {
+                        @foreach (var h in history) {
+                            <tr>
+                                <td class="ps-4" style="width: 30%;">
+                                    <div class="fw-800 text-secondary">@(h.Employee?.Name ?? "Unknown")</div>
+                                    <small class="text-muted">TRX: @h.TransactionId</small>
+                                </td>
+                                <td class="fw-800 text-dark">₹@h.NetPayout.ToString("N0")</td>
+                                <td class="text-center">
+                                    <span class="payout-badge badge-paid"><i class="fas fa-check-circle"></i> Success</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn-print-mini" onclick='prepareAndPrintHistory(@Html.Raw(Json.Serialize(h)))'>
+                                        <i class="fas fa-file-invoice"></i>
+                                    </button>
+                                    <span class="text-muted ms-3 small fw-bold">@h.DisbursedOn.ToString("dd MMM, hh:mm tt")</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // AJAX and Print Scripts remain unchanged to maintain functionality...
+    async function processPayment(empId, amount, days, month) {
+        if (!empId) return;
+        const result = await Swal.fire({
+            title: 'Authorize Payout?',
+            text: "This action will finalize the bank disbursement record.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#10B981',
+            confirmButtonText: 'Yes, Release Funds'
+        });
+
+        if (result.isConfirmed) {
+            Swal.fire({ title: 'Syncing with Treasury...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            const formData = new URLSearchParams();
+            formData.append('empId', empId);
+            formData.append('amount', amount);
+            formData.append('days', days);
+            formData.append('month', month);
+
+            try {
+                const response = await fetch('/Payroll/ConfirmPayment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+                if (response.ok) {
+                    Swal.fire('Disbursed!', 'Transaction recorded successfully.', 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Locked', 'Session expired. Please re-authenticate.', 'error').then(() => location.reload());
+                }
+            } catch (err) { Swal.fire('Error', 'Connectivity issue.', 'error'); }
+        }
+    }
+
+    // Shared HTML Generator for Printing (Premium Styles)
+    function generateHtml(name, code, dept, bank, ifsc, month, days, net, base, bonus) {
+        const formatter = new Intl.NumberFormat('en-IN');
+        return `
+            <html>
+            <head>
+                <style>
+                    body{font-family:sans-serif;padding:50px;color:#1e293b;line-height:1.6;}
+                    .payslip-box{border:3px solid #0f172a;padding:40px;border-radius:20px;max-width:800px;margin:auto;}
+                    .header{text-align:center;border-bottom:2px solid #f1f5f9;padding-bottom:20px;margin-bottom:30px;}
+                    .company-name{color:#d32f2f;font-size:28px;font-weight:bold;margin:0;}
+                    .grid{display:flex;justify-content:space-between;margin-bottom:40px;}
+                    table{width:100%;border-collapse:collapse;margin-top:20px;}
+                    th,td{padding:15px;border:1px solid #e2e8f0;text-align:left;}
+                    th{background:#f8fafc;color:#64748b;font-size:12px;text-transform:uppercase;}
+                    .total-row{background:#f1f5f9;font-weight:bold;font-size:18px;}
+                    .footer{margin-top:60px;display:flex;justify-content:space-between;font-size:12px;}
+                    .sig-box{border-top:1px solid #1e293b;width:200px;text-align:center;padding-top:10px;}
+                </style>
+            </head>
+            <body>
+                <div class="payslip-box">
+                    <div class="header">
+                        <p class="company-name">EAPRO GLOBAL LIMITED</p>
+                        <p style="margin:5px 0;">Salary Slip for <strong>${month}</strong></p>
+                    </div>
+                    <div class="grid">
+                        <div><strong>EMPLOYEE</strong><br>${name}<br>Code: ${code}<br>Dept: ${dept}</div>
+                        <div style="text-align:right;"><strong>BANK DETAILS</strong><br>${bank}<br>IFSC: ${ifsc}<br>Date: ${new Date().toLocaleDateString('en-IN')}</div>
+                    </div>
+                    <table>
+                        <thead><tr><th>Description</th><th style="text-align:right;">Amount (INR)</th></tr></thead>
+                        <tbody>
+                            <tr><td>Basic Salary (Days Present: ${days}/26)</td><td style="text-align:right;">₹${formatter.format(base)}</td></tr>
+                            <tr><td>Performance Bonus / Incentives</td><td style="text-align:right;">₹${formatter.format(bonus)}</td></tr>
+                            <tr class="total-row"><td>NET PAYABLE</td><td style="text-align:right;color:#10b981;">₹${formatter.format(net)}</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="footer">
+                        <div class="sig-box">Employee Signature</div>
+                        <div class="sig-box">Authorized Signatory</div>
+                    </div>
+                </div>
+            </body>
+            </html>`;
+    }
+
+    function prepareAndPrint(data) {
+        if (!data || !data.employee) return;
+        const bonus = data.employee.bonus || 0;
+        const base = data.netPay - bonus;
+        const html = generateHtml(data.employee.name, data.employee.employeeCode, data.employee.department, data.employee.bankAccountNumber, data.employee.ifscCode, data.month, data.daysPresent, data.netPay, base, bonus);
+        triggerPrint(html);
+    }
+
+    function prepareAndPrintHistory(h) {
+        if (!h || !h.employee) return;
+        const bonus = h.employee.bonus || 0;
+        const base = h.netPayout - bonus;
+        const html = generateHtml(h.employee.name, h.employee.employeeCode, h.employee.department, h.employee.bankAccountNumber, h.employee.ifscCode, h.monthYear, h.daysPresent, h.netPayout, base, bonus);
+        triggerPrint(html);
+    }
+
+    function triggerPrint(html) {
+        const printWin = window.open('', '', 'height=800,width=900');
+        if (printWin) {
+            printWin.document.write(html);
+            printWin.document.close();
+            setTimeout(() => { printWin.focus(); printWin.print(); printWin.close(); }, 500);
+        }
+    }
+</script>

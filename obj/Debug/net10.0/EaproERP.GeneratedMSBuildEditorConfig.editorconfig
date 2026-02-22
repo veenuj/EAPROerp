@@ -1,0 +1,251 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFramework = net10.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.RootNamespace = EaproERP
+build_property.RootNamespace = EaproERP
+build_property.ProjectDir = /Users/avyukt/Github/EAPRO/EaproERP/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/avyukt/Github/EAPRO/EaproERP
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Dealers/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGVhbGVycy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Dealers/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGVhbGVycy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Dealers/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGVhbGVycy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Dealers/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGVhbGVycy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Dealers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGVhbGVycy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Factory/DigitalTwin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmFjdG9yeS9EaWdpdGFsVHdpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Finance/CreateInvoice.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9DcmVhdGVJbnZvaWNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Finance/InvoiceList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9JbnZvaWNlTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Finance/Pay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9QYXkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Finance/PaymentSummary.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9QYXltZW50U3VtbWFyeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Finance/SecurityLock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmluYW5jZS9TZWN1cml0eUxvY2suY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Inventory/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Inventory/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Inventory/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Inventory/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Inventory/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSW52ZW50b3J5L0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/AttendanceKiosk.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9BdHRlbmRhbmNlS2lvc2suY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/AttendanceLogs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9BdHRlbmRhbmNlTG9ncy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Disburse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9EaXNidXJzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/EnrollBiometrics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9FbnJvbGxCaW9tZXRyaWNzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9Mb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Payroll/MobileAuth.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5cm9sbC9Nb2JpbGVBdXRoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Procurement/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvY3VyZW1lbnQvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Procurement/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvY3VyZW1lbnQvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Procurement/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvY3VyZW1lbnQvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Procurement/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvY3VyZW1lbnQvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Procurement/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvY3VyZW1lbnQvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Production/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdGlvbi9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Production/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdGlvbi9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/ProjectEngine/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdEVuZ2luZS9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/ProjectEngine/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdEVuZ2luZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Recruitment/CandidateArchive.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVjcnVpdG1lbnQvQ2FuZGlkYXRlQXJjaGl2ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Recruitment/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVjcnVpdG1lbnQvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Recruitment/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVjcnVpdG1lbnQvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Recruitment/Pipeline.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVjcnVpdG1lbnQvUGlwZWxpbmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/ServiceHub/CreateAmc.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VydmljZUh1Yi9DcmVhdGVBbWMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/ServiceHub/CreateWarranty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VydmljZUh1Yi9DcmVhdGVXYXJyYW50eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/ServiceHub/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VydmljZUh1Yi9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/SolarProjects/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU29sYXJQcm9qZWN0cy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/SolarProjects/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU29sYXJQcm9qZWN0cy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/SolarProjects/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU29sYXJQcm9qZWN0cy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Trust/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVHJ1c3QvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Trust/Timeline.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVHJ1c3QvVGltZWxpbmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/avyukt/Github/EAPRO/EaproERP/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-a6loezgg2d

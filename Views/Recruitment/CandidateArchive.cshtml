@@ -1,0 +1,206 @@
+@model IEnumerable<EaproERP.Models.Candidate>
+@{ ViewData["Title"] = "Candidate Archive"; }
+
+<style>
+    :root {
+        --titan-red: #D32F2F;
+        --titan-dark: #0F172A;
+        --titan-border: #E2E8F0;
+        --titan-bg: #F8FAFC;
+    }
+
+    .archive-wrapper { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* --- Mini Dashboard Stats --- */
+    .stat-card {
+        background: #fff;
+        border: 1px solid var(--titan-border);
+        border-radius: 20px;
+        padding: 20px 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        transition: 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+    .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+    /* --- Premium Data Grid --- */
+    .archive-grid-container { 
+        background: #fff; border-radius: 24px; border: 1px solid var(--titan-border); 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.03); overflow: hidden;
+    }
+    
+    .table { margin-bottom: 0; }
+    .table thead { background: var(--titan-bg); }
+    .table th { 
+        font-size: 0.65rem; font-weight: 800; text-transform: uppercase; 
+        letter-spacing: 1.2px; color: #64748B; padding: 18px 24px; border-bottom: 2px solid var(--titan-border); 
+    }
+    .table td { 
+        padding: 18px 24px; vertical-align: middle; font-size: 0.85rem; 
+        border-bottom: 1px solid #F1F5F9; transition: background 0.2s;
+    }
+    .table tbody tr:hover td { background: #F8FAFC; }
+
+    /* --- Avatars & Badges --- */
+    .avatar-circle {
+        width: 38px; height: 38px; border-radius: 50%;
+        background: #F1F5F9; color: var(--titan-dark);
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.9rem;
+    }
+
+    .status-pill { padding: 6px 14px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pill-hired { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+    .pill-rejected { background: #FEE2E2; color: #D32F2F; border: 1px solid #FECACA; }
+    .pill-process { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
+    
+    .offer-tag { 
+        font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; 
+        background: var(--titan-bg); padding: 5px 10px; border-radius: 6px; 
+        border: 1px solid var(--titan-border); font-weight: 600;
+    }
+
+    /* Print Optimization */
+    @@media print {
+        .no-print { display: none !important; }
+        .archive-grid-container { box-shadow: none; border: 1px solid #000; }
+        body { background: #fff; }
+    }
+
+    @@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="py-4 archive-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <div>
+            <h2 class="fw-800 text-dark mb-0">Talent <span class="text-danger">Archive</span></h2>
+            <p class="text-muted fw-bold small uppercase mb-0">Historical Recruitment Ledger</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Pipeline" class="btn btn-outline-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-network-wired me-2"></i> Active Pipeline
+            </a>
+            <button onclick="window.print()" class="btn btn-dark rounded-pill px-4 fw-800 shadow-sm">
+                <i class="fas fa-print me-2"></i> Export Report
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5 no-print">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon bg-light text-dark border"><i class="fas fa-users"></i></div>
+                <div>
+                    <h3 class="fw-800 mb-0">@Model.Count()</h3>
+                    <div class="text-muted small fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Total Applications</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="border-left: 4px solid #15803D;">
+                <div class="stat-icon bg-success-subtle text-success"><i class="fas fa-handshake"></i></div>
+                <div>
+                    <h3 class="fw-800 mb-0">@Model.Count(c => c.Status == "Hired")</h3>
+                    <div class="text-success small fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Successfully Hired</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="border-left: 4px solid #D32F2F;">
+                <div class="stat-icon bg-danger-subtle text-danger"><i class="fas fa-ban"></i></div>
+                <div>
+                    <h3 class="fw-800 mb-0">@Model.Count(c => c.Status == "Rejected")</h3>
+                    <div class="text-danger small fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Archived / Rejected</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="archive-grid-container">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Candidate Profile</th>
+                        <th>Target Position</th>
+                        <th>Applied On</th>
+                        <th>Funnel Stage</th>
+                        <th>Final Status</th>
+                        <th>Offer Ledger</th>
+                        <th class="text-end no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">
+                                        @c.Name.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div>
+                                        <div class="fw-800 text-dark" style="font-size: 0.95rem;">@c.Name</div>
+                                        <div class="text-muted" style="font-size: 0.75rem;">@c.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-dark">@c.Position</span>
+                            </td>
+                            <td>
+                                <span class="text-muted fw-bold">@c.AppliedDate.ToString("dd MMM yyyy")</span>
+                            </td>
+                            <td>
+                                @if (c.Status == "Hired") { 
+                                    <span class="text-success fw-800"><i class="fas fa-check-double me-1"></i> Finalized</span> 
+                                }
+                                else { 
+                                    <span class="text-dark fw-bold">Step @c.CurrentStep / 5</span> 
+                                }
+                            </td>
+                            <td>
+                                @if (c.Status == "Hired") { <span class="status-pill pill-hired">Hired</span> }
+                                else if (c.Status == "Rejected") { <span class="status-pill pill-rejected">Rejected</span> }
+                                else { <span class="status-pill pill-process">In Review</span> }
+                            </td>
+                            <td>
+                                @if (c.Status == "Hired" || c.CurrentStep == 5)
+                                {
+                                    <span class="offer-tag text-success border-success-subtle">
+                                        <i class="fas fa-shield-check me-1"></i> EAP-OFR-@c.Id.ToString("D4")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="offer-tag text-muted"><i class="fas fa-minus"></i></span>
+                                }
+                            </td>
+                            <td class="text-end no-print">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light rounded-pill px-3 fw-800 border" type="button" data-bs-toggle="dropdown">
+                                        Manage <i class="fas fa-chevron-down ms-1" style="font-size: 0.6rem;"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px;">
+                                        <li><a class="dropdown-item fw-bold small py-2" href="/Recruitment/Details/@c.Id"><i class="fas fa-eye me-2 text-muted"></i> View Profile</a></li>
+                                        <li><a class="dropdown-item fw-bold small py-2" href="@c.ResumeUrl" target="_blank"><i class="fas fa-file-pdf me-2 text-danger"></i> Open Resume</a></li>
+                                        @if (c.Status == "Hired")
+                                        {
+                                            <li><hr class="dropdown-divider opacity-10"></li>
+                                            <li><a class="dropdown-item fw-bold small text-success py-2" href="#" onclick="alert('Digital duplicate requested from Node.');">
+                                                <i class="fas fa-print me-2"></i> Reprint Offer
+                                            </a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
