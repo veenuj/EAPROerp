@@ -1,0 +1,325 @@
+@model EaproERP.Models.CustomerTicket
+@{ 
+    ViewData["Title"] = "Eapro Support Portal"; 
+    Layout = "_Layout"; 
+}
+
+<style>
+    :root {
+        --titan-red: #D32F2F;
+        --titan-dark: #0F172A;
+        --titan-bg: #F8FAFC;
+    }
+
+    body {
+        /* Subtle grid background pattern */
+        background-color: var(--titan-bg);
+        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+        background-size: 30px 30px;
+        position: relative;
+    }
+
+    /* --- Ambient Background Orbs --- */
+    .ambient-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.5;
+        animation: float 10s ease-in-out infinite;
+    }
+    
+    .orb-red {
+        top: 10%; right: 15%;
+        width: 400px; height: 400px;
+        background: rgba(211, 47, 47, 0.25);
+    }
+    
+    .orb-blue {
+        top: 40%; left: 10%;
+        width: 350px; height: 350px;
+        background: rgba(15, 23, 42, 0.15);
+        animation-delay: -5s;
+    }
+
+    @@keyframes float {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(-30px, 30px); }
+        100% { transform: translate(0, 0); }
+    }
+
+    .portal-wrapper { 
+        animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+        max-width: 1100px; 
+        margin: 0 auto; 
+        position: relative;
+        z-index: 1;
+    }
+    
+    .hero-section { 
+        text-align: center; 
+        padding: 5rem 0 4rem; 
+    }
+    
+    /* --- Glassmorphism Service Cards --- */
+    .service-card {
+        background: rgba(255, 255, 255, 0.7); 
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5); 
+        border-radius: 28px;
+        padding: 35px 20px; 
+        text-align: center; 
+        cursor: pointer; 
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        height: 100%; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-card:hover { 
+        transform: translateY(-8px); 
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.08); 
+    }
+    
+    .service-card.active { 
+        border-color: var(--titan-red); 
+        background: #fff; 
+        box-shadow: 0 25px 50px rgba(211, 47, 47, 0.15); 
+        transform: translateY(-5px);
+    }
+
+    /* Red gradient highlight on active card */
+    .service-card.active::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+        background: linear-gradient(90deg, var(--titan-red), #ff7043);
+    }
+    
+    .service-icon { 
+        font-size: 2.5rem; 
+        color: #94A3B8; 
+        margin-bottom: 20px; 
+        transition: 0.4s ease; 
+        display: inline-block;
+    }
+
+    .service-card:hover .service-icon { color: #FCA5A5; transform: scale(1.1); }
+    .service-card.active .service-icon { color: var(--titan-red); transform: scale(1.15); }
+
+    .service-title { font-weight: 800; color: var(--titan-dark); font-size: 1.15rem; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .service-desc { font-size: 0.85rem; color: #64748B; font-weight: 600; margin: 0; line-height: 1.5; }
+
+    /* --- Frosted Form Styling --- */
+    .form-card {
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.8); 
+        border-radius: 36px;
+        padding: 4rem; 
+        box-shadow: 0 30px 60px rgba(0,0,0,0.05); 
+        margin-top: 4rem;
+        display: none; 
+    }
+    
+    .form-label-custom { 
+        font-size: 0.75rem; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        letter-spacing: 1.5px; 
+        color: #475569; 
+        margin-bottom: 12px; 
+        display: block; 
+        padding-left: 8px;
+    }
+    
+    .input-premium {
+        background: rgba(248, 250, 252, 0.8); 
+        border: 2px solid transparent; 
+        border-radius: 18px;
+        padding: 18px 24px; 
+        font-weight: 600; 
+        color: var(--titan-dark); 
+        width: 100%; 
+        transition: all 0.3s ease;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .input-premium::placeholder { color: #94A3B8; font-weight: 500; }
+
+    .input-premium:focus { 
+        background: #fff; 
+        border-color: var(--titan-red); 
+        box-shadow: 0 0 0 5px rgba(211, 47, 47, 0.08); 
+        outline: none; 
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, var(--titan-red), #E53935);
+        color: white; border: none; transition: 0.3s;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-3px); 
+        box-shadow: 0 15px 25px rgba(211, 47, 47, 0.25);
+    }
+    
+    @@keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="ambient-orb orb-red"></div>
+<div class="ambient-orb orb-blue"></div>
+
+<div class="py-4 portal-wrapper">
+    
+    <div class="hero-section">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle shadow-lg mb-4" style="width: 90px; height: 90px; background: #fff; border: 2px solid var(--titan-red);">
+            <i class="fas fa-headset fs-1" style="background: linear-gradient(135deg, var(--titan-red), #ff7043); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+        </div>
+        <h1 class="fw-900 text-dark mb-3" style="letter-spacing: -2px; font-size: 3.5rem;">Eapro <span class="text-danger">Support</span></h1>
+        <p class="text-muted fw-bold fs-5" style="max-width: 650px; margin: 0 auto;">Select the type of service you require below to instantly route your request to our engineering team.</p>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card" onclick="selectService('Complaint', this)">
+                <i class="fas fa-tools service-icon"></i>
+                <div class="service-title">Log a Complaint</div>
+                <p class="service-desc">Report an issue with your Eapro product.</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card" onclick="selectService('Installation', this)">
+                <i class="fas fa-plug service-icon"></i>
+                <div class="service-title">Installation</div>
+                <p class="service-desc">Request setup for new equipment.</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card" onclick="selectService('Warranty Extension', this)">
+                <i class="fas fa-shield-alt service-icon"></i>
+                <div class="service-title">Extend Warranty</div>
+                <p class="service-desc">Upgrade your protection plan.</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card" onclick="selectService('Product Registration', this)">
+                <i class="fas fa-box-open service-icon"></i>
+                <div class="service-title">Register Product</div>
+                <p class="service-desc">Activate standard warranty.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-card" id="ticketFormContainer">
+        <div class="d-flex align-items-center gap-4 mb-5 pb-4 border-bottom border-light">
+            <div class="bg-danger rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 65px; height: 65px;">
+                <i id="formIcon" class="fas fa-file-alt text-white fs-4"></i>
+            </div>
+            <div>
+                <h3 class="fw-900 mb-1 text-dark" id="formTitle" style="letter-spacing: -1px;">Complete Your Request</h3>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="spinner-grow text-success" style="width: 8px; height: 8px;" role="status"></div>
+                    <span class="text-muted fw-bold font-monospace" style="font-size: 0.75rem; letter-spacing: 1px;">SECURE_UPLINK_ESTABLISHED</span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="SubmitTicket" method="post">
+            <input type="hidden" asp-for="RequestType" id="RequestType" value="" />
+
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <label class="form-label-custom">Full Name <span class="text-danger">*</span></label>
+                    <input asp-for="CustomerName" class="input-premium" placeholder="e.g. Rahul Sharma" required autocomplete="name" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-custom">Mobile Number <span class="text-danger">*</span></label>
+                    <input asp-for="PhoneNumber" class="input-premium font-monospace fs-6" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-custom">Email Address</label>
+                    <input asp-for="Email" type="email" class="input-premium" placeholder="name@example.com" autocomplete="email" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-custom">Product Serial Number <span class="text-danger">*</span></label>
+                    <input asp-for="ProductSerialNumber" class="input-premium font-monospace text-uppercase" placeholder="e.g. TRON-3200-XXXX" required autocomplete="off" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label-custom" id="descLabel">Additional Details <span class="text-danger">*</span></label>
+                    <textarea asp-for="Description" class="input-premium" rows="5" placeholder="Please provide specific details about your request..." required></textarea>
+                </div>
+                <div class="col-12 mt-5 text-end">
+                    <button type="submit" class="btn btn-submit rounded-pill px-5 py-3 fw-900 fs-6">
+                        SUBMIT TICKET <i class="fas fa-paper-plane ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function selectService(type, element) {
+            document.querySelectorAll('.service-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+            
+            document.getElementById('RequestType').value = type;
+            document.getElementById('formTitle').innerText = type + " Request";
+            
+            const formContainer = document.getElementById('ticketFormContainer');
+            
+            // Only scroll if the form was previously hidden
+            const isHidden = formContainer.style.display === '' || formContainer.style.display === 'none';
+            formContainer.style.display = 'block';
+            
+            const iconEl = document.getElementById('formIcon');
+            iconEl.className = 'text-white fs-4 mb-0 ' + element.querySelector('i').className;
+            
+            if(isHidden) {
+                setTimeout(() => {
+                    formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                Swal.fire({
+                    title: 'Ticket Submitted!',
+                    text: '@TempData["SuccessMessage"]',
+                    icon: 'success',
+                    confirmButtonColor: '#0F172A',
+                    background: '#ffffff',
+                    customClass: { 
+                        popup: 'rounded-5 shadow-lg border', 
+                        title: 'fw-900 text-dark', 
+                        confirmButton: 'rounded-pill px-5 py-3 fw-900' 
+                    }
+                });
+                </text>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                Swal.fire({ 
+                    title: 'Action Required', 
+                    text: '@TempData["ErrorMessage"]', 
+                    icon: 'error', 
+                    confirmButtonColor: '#D32F2F', 
+                    customClass: { 
+                        popup: 'rounded-4 shadow-lg border',
+                        confirmButton: 'rounded-pill px-4 fw-800'
+                    } 
+                });
+                </text>
+            }
+        });
+    </script>
+}

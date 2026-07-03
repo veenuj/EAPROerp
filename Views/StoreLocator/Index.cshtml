@@ -1,0 +1,190 @@
+@model IEnumerable<EaproERP.Models.StoreLocation>
+@{
+    ViewData["Title"] = "Find an Eapro Store";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --titan-red: #D32F2F;
+        --titan-dark: #0F172A;
+        --titan-bg: #F8FAFC;
+    }
+
+    body {
+        background-color: var(--titan-bg);
+        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+
+    .locator-header {
+        text-align: center;
+        padding: 4rem 0 3rem;
+        position: relative;
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 20px 30px;
+        padding-left: 60px;
+        border-radius: 50px;
+        border: 2px solid #fff;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--titan-dark);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--titan-red);
+        box-shadow: 0 15px 35px rgba(211, 47, 47, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--titan-red);
+        font-size: 1.2rem;
+    }
+
+    /* --- Premium Store Cards --- */
+    .store-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        padding-bottom: 4rem;
+    }
+
+    .store-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 24px;
+        padding: 30px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .store-card::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+        background: var(--titan-red); opacity: 0; transition: 0.3s;
+    }
+
+    .store-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    .store-card:hover::before { opacity: 1; }
+
+    .dealer-name { font-weight: 900; color: var(--titan-dark); font-size: 1.2rem; margin-bottom: 5px; line-height: 1.2; }
+    .contact-person { color: var(--titan-red); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; }
+    
+    .info-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .info-icon { color: #94A3B8; margin-top: 3px; }
+    .info-text { color: #475569; font-weight: 600; font-size: 0.9rem; line-height: 1.5; }
+
+    .btn-direction {
+        display: block; width: 100%; text-align: center;
+        background: #F1F5F9; color: var(--titan-dark); font-weight: 800;
+        padding: 12px; border-radius: 12px; margin-top: 20px; text-decoration: none;
+        transition: 0.3s;
+    }
+    
+    .btn-direction:hover { background: var(--titan-dark); color: #fff; }
+
+    @@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="container-fluid px-lg-5">
+    
+    <div class="locator-header">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle shadow-sm mb-4" style="width: 70px; height: 70px; background: #fff; border: 2px solid var(--titan-red);">
+            <i class="fas fa-map-location-dot fs-2 text-danger"></i>
+        </div>
+        <h1 class="fw-900 text-dark mb-3" style="letter-spacing: -1.5px; font-size: 3rem;">Authorized <span class="text-danger">Dealers</span></h1>
+        <p class="text-muted fw-bold fs-5 mb-5">Find an Eapro sales and service center near you.</p>
+
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="storeSearch" class="search-input" placeholder="Search by City, State, Pincode, or Dealer Name..." onkeyup="filterStores()" autocomplete="off" />
+        </div>
+    </div>
+
+    <div class="store-grid" id="storeGrid">
+        @foreach (var store in Model)
+        {
+            <div class="store-card" data-search="@store.DealerName.ToLower() @store.City.ToLower() @store.State.ToLower() @store.Pincode">
+                <div class="dealer-name">@store.DealerName</div>
+                <div class="contact-person"><i class="fas fa-user-tie me-1"></i> @store.ContactPerson</div>
+                
+                <div class="info-row mt-4">
+                    <i class="fas fa-phone-alt info-icon"></i>
+                    <div class="info-text">
+                        <a href="tel:@store.Mobile" class="text-decoration-none text-dark transition-hover">@store.Mobile</a>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <i class="fas fa-map-marker-alt info-icon"></i>
+                    <div class="info-text">
+                        @store.Address <br />
+                        @store.City, @store.State - @store.Pincode
+                    </div>
+                </div>
+
+                <a href="https://maps.google.com/?q=@store.DealerName @store.City @store.Pincode" target="_blank" class="btn-direction">
+                    <i class="fas fa-location-arrow me-2"></i> Get Directions
+                </a>
+            </div>
+        }
+    </div>
+
+    <div id="noResults" class="text-center py-5" style="display: none;">
+        <i class="fas fa-search-location text-muted mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
+        <h3 class="fw-900 text-dark">No Stores Found</h3>
+        <p class="text-muted fw-bold">We couldn't find an authorized dealer matching your search.</p>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        function filterStores() {
+            let input = document.getElementById('storeSearch').value.toLowerCase();
+            let cards = document.getElementsByClassName('store-card');
+            let hasResults = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                let searchData = cards[i].getAttribute('data-search');
+                
+                if (searchData.includes(input)) {
+                    cards[i].style.display = "block";
+                    hasResults = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+
+            // Show or hide the "No Results" message
+            document.getElementById('noResults').style.display = hasResults ? "none" : "block";
+        }
+    </script>
+}

@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"] - EAPRO Titan OS</title>
+    <title>@ViewData["Title"] - EAPRO ERP</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -17,9 +18,18 @@
             --eapro-bg: #F8FAFC;
         }
 
+        /* 🛑 FIX: Apply font ONLY to text elements, exempting icons */
+        body, h1, h2, h3, h4, h5, h6, p, a, span, div, li, ul, button, input {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Specifically exempt FontAwesome icons from the override */
+        i.fas, i.fab, i.far {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+
         body {
             background-color: var(--eapro-bg);
-            font-family: 'Plus Jakarta Sans', sans-serif;
             color: #1F2937;
             overflow-x: hidden;
         }
@@ -33,16 +43,15 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.6rem;
-            color: #fff !important;
-            text-transform: uppercase;
-            letter-spacing: -1px;
+        .navbar-brand img {
+            height: 40px; 
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
         }
-        .navbar-brand span { 
-            color: var(--eapro-red); 
-            text-shadow: 0 0 10px var(--eapro-red-glow);
+
+        .navbar-brand:hover img {
+            transform: scale(1.05); 
         }
 
         .nav-link {
@@ -71,6 +80,7 @@
             box-shadow: 0 8px 20px var(--eapro-red-glow);
         }
 
+        /* 🛑 DROPDOWN SPECIFIC FIXES */
         .dropdown-menu {
             background: #111827;
             border: 1px solid rgba(255,255,255,0.1);
@@ -81,21 +91,34 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
+        .dropdown-header {
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            padding: 0.5rem 1rem;
+        }
+
         .dropdown-item {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.85);
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             padding: 12px 20px;
             border-radius: 10px;
             transition: 0.2s;
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+        }
+
+        .dropdown-item i {
+            width: 20px; /* Aligns icons perfectly */
+            text-align: center;
         }
 
         .dropdown-item:hover {
-            background: rgba(211, 47, 47, 0.1);
-            color: var(--eapro-red);
+            background: rgba(211, 47, 47, 0.15);
+            color: #fff;
         }
 
         /* --- System Status Bar --- */
@@ -113,7 +136,8 @@
             font-size: 0.75rem;
             font-weight: 800;
             color: #fff;
-            font-family: 'JetBrains Mono', monospace;
+            /* Monospace exception for the clock only */
+            font-family: 'JetBrains Mono', monospace !important; 
         }
 
         .pulse-indicator {
@@ -167,7 +191,10 @@
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid px-lg-5">
-            <a class="navbar-brand" href="/">EAPRO<span>TITAN</span></a>
+            
+            <a class="navbar-brand text-decoration-none" href="/">
+                <img src="~/logo.png" alt="EAPRO ERP Logo" />
+            </a>
             
             <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="fas fa-bars-staggered"></i>
@@ -176,18 +203,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" href="/">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" href="/">
                             <i class="fas fa-microchip me-2"></i>OS Core
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")" href="/Home/About">
+                            <i class="fas fa-info-circle me-2"></i>About
+                        </a>
+                    </li>
+                    
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Inventory" || ViewContext.RouteData.Values["controller"]?.ToString() == "Production" ? "active" : "")" href="#" id="supplyDrop" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-boxes-stacked me-2"></i>Supply Chain
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Inventory" || ViewContext.RouteData.Values["controller"]?.ToString() == "Production" || ViewContext.RouteData.Values["controller"]?.ToString() == "ProjectEngine" || ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceHub" ? "active" : "")" href="#" id="operationsDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-industry me-2"></i>Operations
                         </a>
                         <ul class="dropdown-menu">
+                            <li class="dropdown-header text-uppercase small">Supply Chain</li>
                             <li><a class="dropdown-item" href="/Inventory"><i class="fas fa-warehouse text-danger"></i> Warehouse Stock</a></li>
                             <li><a class="dropdown-item" href="/Production"><i class="fas fa-industry text-primary"></i> Manufacturing Hub</a></li>
+                            <li><hr class="dropdown-divider border-secondary opacity-10"></li>
+                            <li class="dropdown-header text-uppercase small">Deployment</li>
+                            <li><a class="dropdown-item" href="/ProjectEngine"><i class="fas fa-tower-observation text-info"></i> EPC Project Engine</a></li>
+                            <li><a class="dropdown-item" href="/ServiceHub"><i class="fas fa-screwdriver-wrench text-success"></i> Eapro Care (Service)</a></li>
                         </ul>
                     </li>
 
@@ -204,35 +242,38 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProjectEngine" || ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceHub" ? "active" : "")" href="#" id="deployDrop" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-solar-panel me-2"></i>Deployment
+                        <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "CustomerPortal" || ViewContext.RouteData.Values["controller"]?.ToString() == "StoreLocator" ? "active" : "")" href="#" id="customerDrop" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-headset me-2"></i>Support
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/ProjectEngine"><i class="fas fa-tower-observation text-info"></i> EPC Project Engine</a></li>
-                            <li><a class="dropdown-item" href="/ServiceHub"><i class="fas fa-screwdriver-wrench text-success"></i> Eapro Care (Service)</a></li>
+                            <li class="dropdown-header text-uppercase small">Public Service</li>
+                            <li><a class="dropdown-item" href="/StoreLocator"><i class="fas fa-map-location-dot text-success"></i> Store Locator</a></li>
+                            <li><a class="dropdown-item" href="/CustomerPortal"><i class="fas fa-tools text-danger"></i> Customer Portal Form</a></li>
+                            <li><hr class="dropdown-divider border-secondary opacity-10"></li>
+                            <li class="dropdown-header text-uppercase small">Internal Management</li>
+                            <li><a class="dropdown-item" onclick="secureAdminAccess()"><i class="fas fa-server text-info"></i> Service Desk Admin</a></li>
                         </ul>
                     </li>
 
-                    @* RENAMED SECTION: CAPITAL & TALENT *@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Finance" || ViewContext.RouteData.Values["controller"]?.ToString() == "Payroll" || ViewContext.RouteData.Values["controller"]?.ToString() == "Recruitment" ? "active" : "")" href="#" id="financeDrop" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-coins me-2"></i>Capital & Talent
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="dropdown-header text-uppercase small fw-800 text-muted opacity-50">Financial Assets</li>
+                            <li class="dropdown-header text-uppercase small">Financial Assets</li>
                             <li><a class="dropdown-item" href="/Finance/CreateInvoice"><i class="fas fa-file-invoice-dollar text-success"></i> New Sales Bill (GST)</a></li>
                             <li><a class="dropdown-item" href="/Finance/InvoiceList"><i class="fas fa-list-check text-primary"></i> Billing History</a></li>
                             
                             <li><hr class="dropdown-divider border-secondary opacity-10"></li>
                             
-                            <li class="dropdown-header text-uppercase small fw-800 text-muted opacity-50">Human Capital</li>
+                            <li class="dropdown-header text-uppercase small">Human Capital</li>
                             <li><a class="dropdown-item" href="/Payroll"><i class="fas fa-users-gear text-info"></i> Personnel Hub</a></li>
                             <li><a class="dropdown-item" href="/Recruitment/Pipeline"><i class="fas fa-user-tie text-warning"></i> Talent Pipeline (Interviews)</a></li>
                             <li><a class="dropdown-item" href="/Payroll/Disburse"><i class="fas fa-indian-rupee-sign text-success"></i> Salary Batch</a></li>
                             <li><a class="dropdown-item" href="/Payroll/AttendanceLogs"><i class="fas fa-fingerprint text-danger"></i> Biometric Logs</a></li>
                             
                             <li><hr class="dropdown-divider border-secondary opacity-10"></li>
-                            <li><a class="dropdown-item text-danger" href="/Payroll/Logout"><i class="fas fa-lock"></i> Terminate Session</a></li>
+                            <li><a class="dropdown-item text-danger" href="/Payroll/Logout"><i class="fas fa-lock text-danger"></i> Terminate Session</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -240,7 +281,7 @@
                 <div class="status-bar d-none d-lg-flex">
                     <div id="live-clock">00:00:00</div>
                     <div class="pulse-indicator"></div>
-                    <span class="text-white fw-800" style="font-size: 0.6rem; letter-spacing: 1px;">TITAN_V5.0_STABLE</span>
+                    <span class="text-white fw-800" style="font-size: 0.6rem; letter-spacing: 1px; font-family: 'Plus Jakarta Sans', sans-serif;">TITAN_V5.0_STABLE</span>
                 </div>
             </div>
         </div>
@@ -260,16 +301,16 @@
         <div class="chat-header text-white">
             <div class="d-flex align-items-center gap-3">
                 <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center shadow" style="width:35px; height:35px;"><i class="fas fa-bolt-lightning fs-6"></i></div>
-                <div><h6 class="mb-0 fw-bold" style="font-size: 0.85rem;">Titan Intelligence</h6><small class="text-success fw-bold" style="font-size: 0.6rem;">● NEURAL_LINK_ESTABLISHED</small></div>
+                <div><h6 class="mb-0 fw-bold" style="font-size: 0.85rem; font-family: 'Plus Jakarta Sans', sans-serif;">Titan Intelligence</h6><small class="text-success fw-bold" style="font-size: 0.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">● NEURAL_LINK_ESTABLISHED</small></div>
             </div>
             <button class="btn-close btn-close-white" style="font-size: 0.7rem;" onclick="toggleChat()"></button>
         </div>
         <div id="chatBody">
-            <div class="chat-message chat-ai shadow-sm">Uplink confirmed. Accessing Roorkee Manufacturing datasets. How can I assist with your <strong>Solar ERP</strong> metrics?</div>
+            <div class="chat-message chat-ai shadow-sm" style="font-family: 'Plus Jakarta Sans', sans-serif;">Uplink confirmed. Accessing Roorkee Manufacturing datasets. How can I assist with your <strong>Solar ERP</strong> metrics?</div>
         </div>
         <div class="chat-footer">
             <div class="chat-input-container shadow-sm border">
-                <input type="text" id="chatInput" placeholder="Query the Neural Core..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="chatInput" placeholder="Query the Neural Core..." onkeypress="handleKeyPress(event)" style="font-family: 'Plus Jakarta Sans', sans-serif;">
                 <button class="btn btn-danger rounded-circle p-0 d-flex align-items-center justify-content-center" onclick="sendMessage()" style="width:35px; height:35px;"><i class="fas fa-paper-plane fs-6"></i></button>
             </div>
         </div>
@@ -309,11 +350,41 @@
         }
 
         function appendMessage(text, sender, isTyping = false) {
-            const msgDiv = document.createElement('div'); msgDiv.className = `chat-message chat-${sender} shadow-sm`; msgDiv.innerHTML = text;
+            const msgDiv = document.createElement('div'); msgDiv.className = `chat-message chat-${sender} shadow-sm`; msgDiv.style.fontFamily = "'Plus Jakarta Sans', sans-serif"; msgDiv.innerHTML = text;
             const id = 'msg-' + Date.now(); if (isTyping) msgDiv.id = id;
             chatBody.appendChild(msgDiv); chatBody.scrollTop = chatBody.scrollHeight; return id;
         }
         function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+        function secureAdminAccess() {
+            Swal.fire({
+                title: '<i class="fas fa-shield-halved text-danger mb-3" style="font-size: 3rem;"></i><br><span class="fw-900" style="font-family: \'Plus Jakarta Sans\', sans-serif;">Restricted Area</span>',
+                text: 'Please enter the administrative key to access the live Service Desk.',
+                input: 'password',
+                inputPlaceholder: '••••••••',
+                inputAttributes: { autocapitalize: 'off', autocorrect: 'off' },
+                showCancelButton: true,
+                confirmButtonColor: '#D32F2F', 
+                cancelButtonColor: '#0F172A',
+                confirmButtonText: 'Unlock System',
+                cancelButtonText: 'Cancel',
+                customClass: { popup: 'rounded-4 shadow-lg border', confirmButton: 'rounded-pill px-4 fw-bold', cancelButton: 'rounded-pill px-4 fw-bold', input: 'rounded-pill text-center fs-5 tracking-widest' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value === 'admin') {
+                        window.location.href = '/CustomerPortal/AdminDashboard';
+                    } else {
+                        Swal.fire({
+                            title: '<span style="font-family: \'Plus Jakarta Sans\', sans-serif;">Access Denied</span>', 
+                            html: '<span style="font-family: \'Plus Jakarta Sans\', sans-serif;">Invalid security credentials.</span>', 
+                            icon: 'error', 
+                            confirmButtonColor: '#0F172A',
+                            customClass: { popup: 'rounded-4 shadow-lg', confirmButton: 'rounded-pill px-4 fw-bold' }
+                        });
+                    }
+                }
+            });
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
