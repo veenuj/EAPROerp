@@ -20,9 +20,12 @@ builder.Services.AddSession(options =>
 });
 
 // 3. Database Configuration (EAPRO SQL Node)
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer("Server=localhost,1433;Database=EaproERP_DB;User Id=SA;Password=EaproERP_StrongPass123!;TrustServerCertificate=True;"));
+// This reads from Docker environment variables first, and falls back to localhost for manual debugging
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? "Server=localhost,1433;Database=EaproERP_DB;User Id=SA;Password=EaproERP_StrongPass123!;TrustServerCertificate=True;";
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 // 4. IIoT & REAL-TIME SERVICES
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<FactoryTelemetryService>();

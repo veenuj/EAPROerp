@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: eapro-db
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=EaproERP_StrongPass123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - eapro_sqldata:/var/opt/mssql
+
+  web:
+    build: .
+    container_name: eapro-web
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    environment:
+      # This successfully overrides the fallback string in Program.cs!
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=EaproERP_DB;User Id=SA;Password=EaproERP_StrongPass123!;TrustServerCertificate=True;
+    depends_on:
+      - db
+
+volumes:
+  eapro_sqldata:

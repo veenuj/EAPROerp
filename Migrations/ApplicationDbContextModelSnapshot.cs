@@ -706,7 +706,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 1,
                             ClientName = "UP Health Dept",
-                            CommencementDate = new DateTime(2026, 2, 22, 21, 23, 53, 223, DateTimeKind.Local).AddTicks(8010),
+                            CommencementDate = new DateTime(2026, 9, 7, 15, 51, 30, 952, DateTimeKind.Local).AddTicks(6690),
                             ContractValue = 12500000m,
                             CurrentPhase = "Installation",
                             ExecutionProgress = 65,
@@ -721,7 +721,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 2,
                             ClientName = "Smart City Auth",
-                            CommencementDate = new DateTime(2026, 2, 22, 21, 23, 53, 223, DateTimeKind.Local).AddTicks(9180),
+                            CommencementDate = new DateTime(2026, 9, 7, 15, 51, 30, 952, DateTimeKind.Local).AddTicks(7850),
                             ContractValue = 4200000m,
                             CurrentPhase = "Site Survey",
                             ExecutionProgress = 15,
