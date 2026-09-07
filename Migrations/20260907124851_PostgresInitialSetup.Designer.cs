@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EaproERP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260907113857_PostgresInitialSetup")]
+    [Migration("20260907124851_PostgresInitialSetup")]
     partial class PostgresInitialSetup
     {
         /// <inheritdoc />
@@ -709,7 +709,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 1,
                             ClientName = "UP Health Dept",
-                            CommencementDate = new DateTime(2026, 9, 7, 17, 8, 56, 910, DateTimeKind.Local).AddTicks(3100),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(6230),
                             ContractValue = 12500000m,
                             CurrentPhase = "Installation",
                             ExecutionProgress = 65,
@@ -724,7 +724,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 2,
                             ClientName = "Smart City Auth",
-                            CommencementDate = new DateTime(2026, 9, 7, 17, 8, 56, 910, DateTimeKind.Local).AddTicks(4280),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(7350),
                             ContractValue = 4200000m,
                             CurrentPhase = "Site Survey",
                             ExecutionProgress = 15,

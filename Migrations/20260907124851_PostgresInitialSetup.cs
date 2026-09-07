@@ -414,8 +414,8 @@ namespace EaproERP.Migrations
                 columns: new[] { "Id", "ClientName", "CommencementDate", "ContractValue", "CurrentPhase", "ExecutionProgress", "ProjectName", "ProjectType", "RoofType", "ShadowAnalysisScore", "SiteLocation", "SystemCapacityKW" },
                 values: new object[,]
                 {
-                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 17, 8, 56, 910, DateTimeKind.Local).AddTicks(3100), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
-                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 17, 8, 56, 910, DateTimeKind.Local).AddTicks(4280), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
+                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(6230), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
+                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(7350), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
                 });
 
             migrationBuilder.InsertData(
