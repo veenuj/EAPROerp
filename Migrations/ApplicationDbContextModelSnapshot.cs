@@ -64,10 +64,10 @@ namespace EaproERP.Migrations
                         {
                             Id = 1,
                             ClientName = "Pacific Mall Dehradun",
-                            ContractExpiryDate = new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ContractStartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ContractExpiryDate = new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ContractStartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             ContractValue = 120000m,
-                            NextScheduledService = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NextScheduledService = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             ProjectSite = "Main Roof B",
                             ServiceFrequency = "Quarterly"
                         });
@@ -149,7 +149,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 1,
-                            AppliedDate = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppliedDate = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             CurrentStep = 1,
                             Email = "rahul.v@gmail.com",
                             Name = "Rahul Verma",
@@ -160,7 +160,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 2,
-                            AppliedDate = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppliedDate = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Utc),
                             CurrentStep = 3,
                             Email = "sneha.k@eapro.in",
                             Name = "Sneha Kapoor",
@@ -171,7 +171,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 3,
-                            AppliedDate = new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppliedDate = new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             CurrentStep = 4,
                             Email = "aditya.v@outlook.com",
                             Name = "Vikram Aditya",
@@ -182,7 +182,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 4,
-                            AppliedDate = new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppliedDate = new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             CurrentStep = 5,
                             Email = "pooja.h@gmail.com",
                             Name = "Pooja Hegde",
@@ -237,7 +237,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 20, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 20, 10, 30, 0, 0, DateTimeKind.Utc),
                             CustomerName = "Rakesh Tiwari",
                             Description = "Inverter is showing error code E-04 during power cut.",
                             Email = "rakesh.t@gmail.com",
@@ -249,7 +249,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 18, 14, 15, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 18, 14, 15, 0, 0, DateTimeKind.Utc),
                             CustomerName = "Meera Joshi",
                             Description = "Need installation for 5KW solar panels at my residence in Dehradun.",
                             Email = "meera.j@yahoo.com",
@@ -261,7 +261,7 @@ namespace EaproERP.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 2, 21, 9, 45, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 2, 21, 9, 45, 0, 0, DateTimeKind.Utc),
                             CustomerName = "Suresh Kumar",
                             Description = "Registering newly purchased battery for standard 5-year warranty.",
                             Email = "suresh.k@outlook.com",
@@ -443,7 +443,7 @@ namespace EaproERP.Migrations
                             BankAccountNumber = "",
                             BaseSalary = 45000m,
                             Bonus = 5000m,
-                            DateOfJoining = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfJoining = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             Department = "Manufacturing",
                             Designation = "Plant Supervisor",
                             Email = "amit.sharma@eapro.in",
@@ -461,7 +461,7 @@ namespace EaproERP.Migrations
                             BankAccountNumber = "",
                             BaseSalary = 85000m,
                             Bonus = 18000m,
-                            DateOfJoining = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfJoining = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Department = "R&D",
                             Designation = "DSP Solar Engineer",
                             Email = "priya.singh@eapro.in",
@@ -706,7 +706,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 1,
                             ClientName = "UP Health Dept",
-                            CommencementDate = new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(6230),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(50),
                             ContractValue = 12500000m,
                             CurrentPhase = "Installation",
                             ExecutionProgress = 65,
@@ -721,7 +721,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 2,
                             ClientName = "Smart City Auth",
-                            CommencementDate = new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(7350),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(1200),
                             ContractValue = 4200000m,
                             CurrentPhase = "Site Survey",
                             ExecutionProgress = 15,
@@ -1544,7 +1544,7 @@ namespace EaproERP.Migrations
                             Hash = "816E2247E11695CBA365930039E1C2E1",
                             PreviousHash = "0",
                             ProductId = "TRON-3200-S04-001",
-                            Timestamp = new DateTime(2026, 2, 20, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                            Timestamp = new DateTime(2026, 2, 20, 10, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
@@ -1553,7 +1553,7 @@ namespace EaproERP.Migrations
                             Hash = "2C8C3886A26B5061B465228D7017A44F",
                             PreviousHash = "816E2247E11695CBA365930039E1C2E1",
                             ProductId = "TRON-3200-S04-001",
-                            Timestamp = new DateTime(2026, 2, 20, 14, 30, 0, 0, DateTimeKind.Unspecified)
+                            Timestamp = new DateTime(2026, 2, 20, 14, 30, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -1661,7 +1661,7 @@ namespace EaproERP.Migrations
                             CustomerName = "Anuj Dhiman",
                             IsRegistered = true,
                             ProductName = "Tron 3200 PCU",
-                            PurchaseDate = new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PurchaseDate = new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             SerialNumber = "TRON-3200-S04-001",
                             WarrantyPeriodMonths = 24
                         });

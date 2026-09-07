@@ -345,17 +345,17 @@ namespace EaproERP.Migrations
             migrationBuilder.InsertData(
                 table: "AmcContracts",
                 columns: new[] { "Id", "ClientName", "ContractExpiryDate", "ContractStartDate", "ContractValue", "NextScheduledService", "ProjectSite", "ServiceFrequency" },
-                values: new object[] { 1, "Pacific Mall Dehradun", new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 120000m, new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Main Roof B", "Quarterly" });
+                values: new object[] { 1, "Pacific Mall Dehradun", new DateTime(2027, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 120000m, new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Main Roof B", "Quarterly" });
 
             migrationBuilder.InsertData(
                 table: "Candidates",
                 columns: new[] { "Id", "AppliedDate", "CurrentStep", "Email", "Name", "Notes", "Position", "ResumeUrl", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "rahul.v@gmail.com", "Rahul Verma", null, "GenAI Developer", "", "Active" },
-                    { 2, new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "sneha.k@eapro.in", "Sneha Kapoor", null, "Supply Chain Manager", "", "Active" },
-                    { 3, new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "aditya.v@outlook.com", "Vikram Aditya", null, "Embedded Systems Engineer", "", "Active" },
-                    { 4, new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, "pooja.h@gmail.com", "Pooja Hegde", null, "Technical Sales Executive", "", "Active" }
+                    { 1, new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc), 1, "rahul.v@gmail.com", "Rahul Verma", null, "GenAI Developer", "", "Active" },
+                    { 2, new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Utc), 3, "sneha.k@eapro.in", "Sneha Kapoor", null, "Supply Chain Manager", "", "Active" },
+                    { 3, new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc), 4, "aditya.v@outlook.com", "Vikram Aditya", null, "Embedded Systems Engineer", "", "Active" },
+                    { 4, new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Utc), 5, "pooja.h@gmail.com", "Pooja Hegde", null, "Technical Sales Executive", "", "Active" }
                 });
 
             migrationBuilder.InsertData(
@@ -363,9 +363,9 @@ namespace EaproERP.Migrations
                 columns: new[] { "Id", "CreatedAt", "CustomerName", "Description", "Email", "PhoneNumber", "ProductSerialNumber", "RequestType", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 20, 10, 30, 0, 0, DateTimeKind.Unspecified), "Rakesh Tiwari", "Inverter is showing error code E-04 during power cut.", "rakesh.t@gmail.com", "+91-9876512345", "TRON-3200-S04-005", "Complaint", "Open" },
-                    { 2, new DateTime(2026, 2, 18, 14, 15, 0, 0, DateTimeKind.Unspecified), "Meera Joshi", "Need installation for 5KW solar panels at my residence in Dehradun.", "meera.j@yahoo.com", "+91-8765423456", "EAPRO-590W-PANEL-SET", "Installation", "Resolved" },
-                    { 3, new DateTime(2026, 2, 21, 9, 45, 0, 0, DateTimeKind.Unspecified), "Suresh Kumar", "Registering newly purchased battery for standard 5-year warranty.", "suresh.k@outlook.com", "+91-7654334567", "ENERBATT-250AH-001", "Product Registration", "Open" }
+                    { 1, new DateTime(2026, 2, 20, 10, 30, 0, 0, DateTimeKind.Utc), "Rakesh Tiwari", "Inverter is showing error code E-04 during power cut.", "rakesh.t@gmail.com", "+91-9876512345", "TRON-3200-S04-005", "Complaint", "Open" },
+                    { 2, new DateTime(2026, 2, 18, 14, 15, 0, 0, DateTimeKind.Utc), "Meera Joshi", "Need installation for 5KW solar panels at my residence in Dehradun.", "meera.j@yahoo.com", "+91-8765423456", "EAPRO-590W-PANEL-SET", "Installation", "Resolved" },
+                    { 3, new DateTime(2026, 2, 21, 9, 45, 0, 0, DateTimeKind.Utc), "Suresh Kumar", "Registering newly purchased battery for standard 5-year warranty.", "suresh.k@outlook.com", "+91-7654334567", "ENERBATT-250AH-001", "Product Registration", "Open" }
                 });
 
             migrationBuilder.InsertData(
@@ -385,8 +385,8 @@ namespace EaproERP.Migrations
                 columns: new[] { "Id", "AIPerformanceInsight", "BankAccountNumber", "BaseSalary", "BiometricCredentialId", "BiometricPublicKey", "Bonus", "DateOfJoining", "Department", "Designation", "Email", "EmergencyContact", "EmployeeCode", "GovernmentId", "IFSCCode", "JobLocation", "Name", "Phone" },
                 values: new object[,]
                 {
-                    { 101, null, "", 45000m, null, null, 5000m, new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Manufacturing", "Plant Supervisor", "amit.sharma@eapro.in", "", "EAP-2301-1001", "ABCDE1234F", "", "Roorkee", "Amit Sharma", "+91-9876543210" },
-                    { 102, null, "", 85000m, null, null, 18000m, new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "R&D", "DSP Solar Engineer", "priya.singh@eapro.in", "", "EAP-2305-1002", "456789012345", "", "Roorkee", "Priya Singh", "+91-8765432109" }
+                    { 101, null, "", 45000m, null, null, 5000m, new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc), "Manufacturing", "Plant Supervisor", "amit.sharma@eapro.in", "", "EAP-2301-1001", "ABCDE1234F", "", "Roorkee", "Amit Sharma", "+91-9876543210" },
+                    { 102, null, "", 85000m, null, null, 18000m, new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Utc), "R&D", "DSP Solar Engineer", "priya.singh@eapro.in", "", "EAP-2305-1002", "456789012345", "", "Roorkee", "Priya Singh", "+91-8765432109" }
                 });
 
             migrationBuilder.InsertData(
@@ -414,8 +414,8 @@ namespace EaproERP.Migrations
                 columns: new[] { "Id", "ClientName", "CommencementDate", "ContractValue", "CurrentPhase", "ExecutionProgress", "ProjectName", "ProjectType", "RoofType", "ShadowAnalysisScore", "SiteLocation", "SystemCapacityKW" },
                 values: new object[,]
                 {
-                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(6230), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
-                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 18, 18, 51, 153, DateTimeKind.Local).AddTicks(7350), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
+                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(50), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
+                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(1200), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
                 });
 
             migrationBuilder.InsertData(
@@ -489,8 +489,8 @@ namespace EaproERP.Migrations
                 columns: new[] { "Index", "Data", "Hash", "PreviousHash", "ProductId", "Timestamp" },
                 values: new object[,]
                 {
-                    { 1, "GENESIS: Manufacturing Started (Roorkee Unit 4)", "816E2247E11695CBA365930039E1C2E1", "0", "TRON-3200-S04-001", new DateTime(2026, 2, 20, 10, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "QC Passed: Pure Sine Wave Efficiency 98.5%", "2C8C3886A26B5061B465228D7017A44F", "816E2247E11695CBA365930039E1C2E1", "TRON-3200-S04-001", new DateTime(2026, 2, 20, 14, 30, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, "GENESIS: Manufacturing Started (Roorkee Unit 4)", "816E2247E11695CBA365930039E1C2E1", "0", "TRON-3200-S04-001", new DateTime(2026, 2, 20, 10, 0, 0, 0, DateTimeKind.Utc) },
+                    { 2, "QC Passed: Pure Sine Wave Efficiency 98.5%", "2C8C3886A26B5061B465228D7017A44F", "816E2247E11695CBA365930039E1C2E1", "TRON-3200-S04-001", new DateTime(2026, 2, 20, 14, 30, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
@@ -505,7 +505,7 @@ namespace EaproERP.Migrations
             migrationBuilder.InsertData(
                 table: "Warranties",
                 columns: new[] { "Id", "CustomerName", "IsRegistered", "ProductName", "PurchaseDate", "SerialNumber", "WarrantyPeriodMonths" },
-                values: new object[] { 1, "Anuj Dhiman", true, "Tron 3200 PCU", new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "TRON-3200-S04-001", 24 });
+                values: new object[] { 1, "Anuj Dhiman", true, "Tron 3200 PCU", new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Utc), "TRON-3200-S04-001", 24 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttendanceRecords_EmployeeId",
