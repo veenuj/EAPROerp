@@ -77,12 +77,12 @@ namespace EaproERP.Data
             modelBuilder.Entity<Employee>().HasData(
                 new Employee { 
                     Id = 101, Name = "Amit Sharma", Department = "Manufacturing", Designation = "Plant Supervisor", 
-                    BaseSalary = 45000, Bonus = 5000, EmployeeCode = "EAP-2301-1001", DateOfJoining = new DateTime(2023, 1, 15, 0, 0, 0, DateTimeKind.Utc),
+                    BaseSalary = 45000, Bonus = 5000, EmployeeCode = "EAP-2301-1001", DateOfJoining = new DateTime(2023, 1, 15),
                     Email = "amit.sharma@eapro.in", Phone = "+91-9876543210", GovernmentId = "ABCDE1234F"
                 },
                 new Employee { 
                     Id = 102, Name = "Priya Singh", Department = "R&D", Designation = "DSP Solar Engineer", 
-                    BaseSalary = 85000, Bonus = 18000, EmployeeCode = "EAP-2305-1002", DateOfJoining = new DateTime(2023, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+                    BaseSalary = 85000, Bonus = 18000, EmployeeCode = "EAP-2305-1002", DateOfJoining = new DateTime(2023, 5, 20),
                     Email = "priya.singh@eapro.in", Phone = "+91-8765432109", GovernmentId = "456789012345"
                 }
             );
@@ -116,32 +116,32 @@ namespace EaproERP.Data
 
             // --- SEED DATA: SERVICE HUB (WARRANTY & AMC) ---
             modelBuilder.Entity<WarrantyNode>().HasData(
-                new WarrantyNode { Id = 1, SerialNumber = "TRON-3200-S04-001", CustomerName = "Anuj Dhiman", ProductName = "Tron 3200 PCU", PurchaseDate = new DateTime(2025, 8, 10, 0, 0, 0, DateTimeKind.Utc), WarrantyPeriodMonths = 24, IsRegistered = true }
+                new WarrantyNode { Id = 1, SerialNumber = "TRON-3200-S04-001", CustomerName = "Anuj Dhiman", ProductName = "Tron 3200 PCU", PurchaseDate = new DateTime(2025, 8, 10), WarrantyPeriodMonths = 24, IsRegistered = true }
             );
 
             modelBuilder.Entity<AmcNode>().HasData(
-                new AmcNode { Id = 1, ClientName = "Pacific Mall Dehradun", ProjectSite = "Main Roof B", ContractStartDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), ContractExpiryDate = new DateTime(2027, 1, 1, 0, 0, 0, DateTimeKind.Utc), ContractValue = 120000, ServiceFrequency = "Quarterly", NextScheduledService = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc) }
+                new AmcNode { Id = 1, ClientName = "Pacific Mall Dehradun", ProjectSite = "Main Roof B", ContractStartDate = new DateTime(2026, 1, 1), ContractExpiryDate = new DateTime(2027, 1, 1), ContractValue = 120000, ServiceFrequency = "Quarterly", NextScheduledService = new DateTime(2026, 4, 1) }
             );
 
             // --- SEED DATA: BLOCKCHAIN TRUST LEDGER ---
             modelBuilder.Entity<TrustBlock>().HasData(
-                new TrustBlock { Index = 1, Timestamp = new DateTime(2026, 2, 20, 10, 0, 0, DateTimeKind.Utc), ProductId = "TRON-3200-S04-001", Data = "GENESIS: Manufacturing Started (Roorkee Unit 4)", PreviousHash = "0", Hash = "816E2247E11695CBA365930039E1C2E1" },
-                new TrustBlock { Index = 2, Timestamp = new DateTime(2026, 2, 20, 14, 30, 0, DateTimeKind.Utc), ProductId = "TRON-3200-S04-001", Data = "QC Passed: Pure Sine Wave Efficiency 98.5%", PreviousHash = "816E2247E11695CBA365930039E1C2E1", Hash = "2C8C3886A26B5061B465228D7017A44F" }
+                new TrustBlock { Index = 1, Timestamp = new DateTime(2026, 2, 20, 10, 0, 0), ProductId = "TRON-3200-S04-001", Data = "GENESIS: Manufacturing Started (Roorkee Unit 4)", PreviousHash = "0", Hash = "816E2247E11695CBA365930039E1C2E1" },
+                new TrustBlock { Index = 2, Timestamp = new DateTime(2026, 2, 20, 14, 30, 0), ProductId = "TRON-3200-S04-001", Data = "QC Passed: Pure Sine Wave Efficiency 98.5%", PreviousHash = "816E2247E11695CBA365930039E1C2E1", Hash = "2C8C3886A26B5061B465228D7017A44F" }
             );
 
             // --- SEED DATA: TALENT PIPELINE (NEW CANDIDATES) ---
             modelBuilder.Entity<Candidate>().HasData(
-                new Candidate { Id = 1, Name = "Rahul Verma", Email = "rahul.v@gmail.com", Position = "GenAI Developer", CurrentStep = 1, Status = "Active", AppliedDate = new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new Candidate { Id = 2, Name = "Sneha Kapoor", Email = "sneha.k@eapro.in", Position = "Supply Chain Manager", CurrentStep = 3, Status = "Active", AppliedDate = new DateTime(2026, 2, 12, 0, 0, 0, DateTimeKind.Utc) },
-                new Candidate { Id = 3, Name = "Vikram Aditya", Email = "aditya.v@outlook.com", Position = "Embedded Systems Engineer", CurrentStep = 4, Status = "Active", AppliedDate = new DateTime(2026, 2, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new Candidate { Id = 4, Name = "Pooja Hegde", Email = "pooja.h@gmail.com", Position = "Technical Sales Executive", CurrentStep = 5, Status = "Active", AppliedDate = new DateTime(2026, 2, 18, 0, 0, 0, DateTimeKind.Utc) }
+                new Candidate { Id = 1, Name = "Rahul Verma", Email = "rahul.v@gmail.com", Position = "GenAI Developer", CurrentStep = 1, Status = "Active", AppliedDate = new DateTime(2026, 2, 10) },
+                new Candidate { Id = 2, Name = "Sneha Kapoor", Email = "sneha.k@eapro.in", Position = "Supply Chain Manager", CurrentStep = 3, Status = "Active", AppliedDate = new DateTime(2026, 2, 12) },
+                new Candidate { Id = 3, Name = "Vikram Aditya", Email = "aditya.v@outlook.com", Position = "Embedded Systems Engineer", CurrentStep = 4, Status = "Active", AppliedDate = new DateTime(2026, 2, 15) },
+                new Candidate { Id = 4, Name = "Pooja Hegde", Email = "pooja.h@gmail.com", Position = "Technical Sales Executive", CurrentStep = 5, Status = "Active", AppliedDate = new DateTime(2026, 2, 18) }
             );
 
             // --- SEED DATA: CUSTOMER TICKETS (NEW) ---
             modelBuilder.Entity<CustomerTicket>().HasData(
-                new CustomerTicket { Id = 1, RequestType = "Complaint", CustomerName = "Rakesh Tiwari", PhoneNumber = "+91-9876512345", Email = "rakesh.t@gmail.com", ProductSerialNumber = "TRON-3200-S04-005", Description = "Inverter is showing error code E-04 during power cut.", Status = "Open", CreatedAt = new DateTime(2026, 2, 20, 10, 30, 0, DateTimeKind.Utc) },
-                new CustomerTicket { Id = 2, RequestType = "Installation", CustomerName = "Meera Joshi", PhoneNumber = "+91-8765423456", Email = "meera.j@yahoo.com", ProductSerialNumber = "EAPRO-590W-PANEL-SET", Description = "Need installation for 5KW solar panels at my residence in Dehradun.", Status = "Resolved", CreatedAt = new DateTime(2026, 2, 18, 14, 15, 0, DateTimeKind.Utc) },
-                new CustomerTicket { Id = 3, RequestType = "Product Registration", CustomerName = "Suresh Kumar", PhoneNumber = "+91-7654334567", Email = "suresh.k@outlook.com", ProductSerialNumber = "ENERBATT-250AH-001", Description = "Registering newly purchased battery for standard 5-year warranty.", Status = "Open", CreatedAt = new DateTime(2026, 2, 21, 9, 45, 0, DateTimeKind.Utc) }
+                new CustomerTicket { Id = 1, RequestType = "Complaint", CustomerName = "Rakesh Tiwari", PhoneNumber = "+91-9876512345", Email = "rakesh.t@gmail.com", ProductSerialNumber = "TRON-3200-S04-005", Description = "Inverter is showing error code E-04 during power cut.", Status = "Open", CreatedAt = new DateTime(2026, 2, 20, 10, 30, 0) },
+                new CustomerTicket { Id = 2, RequestType = "Installation", CustomerName = "Meera Joshi", PhoneNumber = "+91-8765423456", Email = "meera.j@yahoo.com", ProductSerialNumber = "EAPRO-590W-PANEL-SET", Description = "Need installation for 5KW solar panels at my residence in Dehradun.", Status = "Resolved", CreatedAt = new DateTime(2026, 2, 18, 14, 15, 0) },
+                new CustomerTicket { Id = 3, RequestType = "Product Registration", CustomerName = "Suresh Kumar", PhoneNumber = "+91-7654334567", Email = "suresh.k@outlook.com", ProductSerialNumber = "ENERBATT-250AH-001", Description = "Registering newly purchased battery for standard 5-year warranty.", Status = "Open", CreatedAt = new DateTime(2026, 2, 21, 9, 45, 0) }
             );
 
             // --- SEED DATA: EAPRO STORE LOCATOR (LIVE DEALER NETWORK) ---
