@@ -36,6 +36,18 @@ namespace EaproERP.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Map all DateTime properties to timestamp without time zone for PostgreSQL compatibility
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetColumnType("timestamp without time zone");
+                    }
+                }
+            }
+
             // --- PRECISION & COLUMN CONFIGURATION ---
             modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(18, 2);
             modelBuilder.Entity<Employee>().Property(e => e.BaseSalary).HasPrecision(18, 2);

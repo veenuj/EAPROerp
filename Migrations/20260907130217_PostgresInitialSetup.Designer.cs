@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EaproERP.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260907125619_PostgresInitialSetup")]
+    [Migration("20260907130217_PostgresInitialSetup")]
     partial class PostgresInitialSetup
     {
         /// <inheritdoc />
@@ -38,17 +38,17 @@ namespace EaproERP.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ContractExpiryDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("ContractStartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("ContractValue")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<DateTime>("NextScheduledService")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("ProjectSite")
                         .IsRequired()
@@ -85,7 +85,7 @@ namespace EaproERP.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer");
@@ -116,7 +116,7 @@ namespace EaproERP.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AppliedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("CurrentStep")
                         .HasColumnType("integer");
@@ -204,7 +204,7 @@ namespace EaproERP.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -393,7 +393,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<DateTime>("DateOfJoining")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Department")
                         .IsRequired()
@@ -490,7 +490,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("BillingDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CustomerGSTIN")
                         .HasColumnType("text");
@@ -506,7 +506,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("text");
@@ -665,7 +665,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CommencementDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("ContractValue")
                         .HasPrecision(18, 2)
@@ -709,7 +709,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 1,
                             ClientName = "UP Health Dept",
-                            CommencementDate = new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(50),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 32, 17, 165, DateTimeKind.Local).AddTicks(9760),
                             ContractValue = 12500000m,
                             CurrentPhase = "Installation",
                             ExecutionProgress = 65,
@@ -724,7 +724,7 @@ namespace EaproERP.Migrations
                         {
                             Id = 2,
                             ClientName = "Smart City Auth",
-                            CommencementDate = new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(1200),
+                            CommencementDate = new DateTime(2026, 9, 7, 18, 32, 17, 166, DateTimeKind.Local).AddTicks(910),
                             ContractValue = 4200000m,
                             CurrentPhase = "Site Survey",
                             ExecutionProgress = 15,
@@ -755,7 +755,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DisbursedOn")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer");
@@ -1533,7 +1533,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Index");
 
@@ -1644,7 +1644,7 @@ namespace EaproERP.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SerialNumber")
                         .IsRequired()

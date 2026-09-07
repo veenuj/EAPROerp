@@ -22,11 +22,11 @@ namespace EaproERP.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ClientName = table.Column<string>(type: "text", nullable: false),
                     ProjectSite = table.Column<string>(type: "text", nullable: false),
-                    ContractStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ContractExpiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ContractStartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ContractExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ContractValue = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     ServiceFrequency = table.Column<string>(type: "text", nullable: false),
-                    NextScheduledService = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    NextScheduledService = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,7 +45,7 @@ namespace EaproERP.Migrations
                     ResumeUrl = table.Column<string>(type: "text", nullable: false),
                     CurrentStep = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
-                    AppliedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AppliedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Notes = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -66,7 +66,7 @@ namespace EaproERP.Migrations
                     ProductSerialNumber = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,7 +106,7 @@ namespace EaproERP.Migrations
                     BaseSalary = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Bonus = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: true),
                     AIPerformanceInsight = table.Column<string>(type: "text", nullable: true),
-                    DateOfJoining = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateOfJoining = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Phone = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     EmergencyContact = table.Column<string>(type: "text", nullable: false),
@@ -146,13 +146,13 @@ namespace EaproERP.Migrations
                     InvoiceNumber = table.Column<string>(type: "text", nullable: true),
                     CustomerName = table.Column<string>(type: "text", nullable: false),
                     CustomerGSTIN = table.Column<string>(type: "text", nullable: true),
-                    BillingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BillingDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     IsGstInvoice = table.Column<bool>(type: "boolean", nullable: false),
                     BaseAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     TaxRate = table.Column<decimal>(type: "numeric", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: true),
                     PaymentMethod = table.Column<string>(type: "text", nullable: true),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PaymentDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     TransactionId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -194,7 +194,7 @@ namespace EaproERP.Migrations
                     ExecutionProgress = table.Column<int>(type: "integer", nullable: false),
                     CurrentPhase = table.Column<string>(type: "text", nullable: false),
                     ContractValue = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
-                    CommencementDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CommencementDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,7 +244,7 @@ namespace EaproERP.Migrations
                 {
                     Index = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ProductId = table.Column<string>(type: "text", nullable: false),
                     Data = table.Column<string>(type: "text", nullable: false),
                     PreviousHash = table.Column<string>(type: "text", nullable: false),
@@ -283,7 +283,7 @@ namespace EaproERP.Migrations
                     SerialNumber = table.Column<string>(type: "text", nullable: false),
                     CustomerName = table.Column<string>(type: "text", nullable: false),
                     ProductName = table.Column<string>(type: "text", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     WarrantyPeriodMonths = table.Column<int>(type: "integer", nullable: false),
                     IsRegistered = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -299,7 +299,7 @@ namespace EaproERP.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EmployeeId = table.Column<int>(type: "integer", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PunchInTime = table.Column<TimeSpan>(type: "interval", nullable: true),
                     PunchOutTime = table.Column<TimeSpan>(type: "interval", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: false)
@@ -328,7 +328,7 @@ namespace EaproERP.Migrations
                     CalculatedGross = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     BonusAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     NetPayout = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    DisbursedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DisbursedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     TransactionId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -414,8 +414,8 @@ namespace EaproERP.Migrations
                 columns: new[] { "Id", "ClientName", "CommencementDate", "ContractValue", "CurrentPhase", "ExecutionProgress", "ProjectName", "ProjectType", "RoofType", "ShadowAnalysisScore", "SiteLocation", "SystemCapacityKW" },
                 values: new object[,]
                 {
-                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(50), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
-                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 18, 26, 18, 618, DateTimeKind.Local).AddTicks(1200), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
+                    { 1, "UP Health Dept", new DateTime(2026, 9, 7, 18, 32, 17, 165, DateTimeKind.Local).AddTicks(9760), 12500000m, "Installation", 65, "Roorkee Medical College Solar Hub", "On-Grid", "RRC Slab", 0, "Roorkee, UK", 450.0 },
+                    { 2, "Smart City Auth", new DateTime(2026, 9, 7, 18, 32, 17, 166, DateTimeKind.Local).AddTicks(910), 4200000m, "Site Survey", 15, "Meerut IT Park Unit 4", "Hybrid", "RRC Slab", 0, "Meerut, UP", 120.5 }
                 });
 
             migrationBuilder.InsertData(
