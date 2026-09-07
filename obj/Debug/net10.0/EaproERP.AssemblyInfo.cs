@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EaproERP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16c9af823156747f57382958599f91fc72d4913a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c40be0f5b5378c69cc7bbfe9bfd6b5e6b8fddbda")]
 [assembly: System.Reflection.AssemblyProductAttribute("EaproERP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EaproERP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

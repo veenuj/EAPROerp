@@ -19,13 +19,12 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".EaproERP.Session";
 });
 
-// 3. Database Configuration (EAPRO SQL Node)
-// This reads from Docker environment variables first, and falls back to localhost for manual debugging
+// 3. Database Configuration (Neon PostgreSQL Node)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? "Server=localhost,1433;Database=EaproERP_DB;User Id=SA;Password=EaproERP_StrongPass123!;TrustServerCertificate=True;";
+    ?? "postgresql://neondb_owner:npg_fyZ1duh5BGao@ep-misty-boat-ax5cfxki-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 // 4. IIoT & REAL-TIME SERVICES
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<FactoryTelemetryService>();
